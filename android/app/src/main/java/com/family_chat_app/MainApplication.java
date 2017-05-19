@@ -3,6 +3,9 @@ package com.family_chat_app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.beefe.picker.PickerViewPackage;
+import com.zhangxu.realpath.RCTRealPathPackage;
+import com.imagepicker.ImagePickerPackage;
 import com.tradle.react.UdpSocketsModule;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -24,6 +27,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new PickerViewPackage(),
+            new RCTRealPathPackage(),
+            new ImagePickerPackage(),
             new UdpSocketsModule()
       );
     }

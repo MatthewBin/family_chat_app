@@ -3,32 +3,85 @@
  * @providesModule Utils
  */
 'use strict'
+const Utils = {};
 
-global.Buffer = global.Buffer || require('buffer').Buffer;
-var dgram = require('react-native-udp')
-var socket = dgram.createSocket('udp4')
-socket.bind(5555)
-socket.once('listening', function () {
+import io from 'socket.io-client'
 
-    var uint = [];
-    var str = JSON.stringify({
-        type:0
-    });
-    for (var i = 0, l = str.length; i < l; i++){
-        uint[i] = str.charCodeAt(i);
+const socket = io('http://192.168.1.23:9521', {
+    transports: ['websocket'],
+});
+
+socket.on('connect', function () {
+    socket.emit('test', "Real time baby  ")
+});
+
+Utils.postFetch = function (url, body, successCallback, errorCallback) {
+    if (!url || !body) {
+        if (errorCallback) {
+            errorCallback("body或url为空");
+        }
+        return;
     }
 
-    socket.send(uint, 0, uint.length, 8677, '192.168.1.23', function(err) {
-        if (err) throw err
-        console.log('message was sent')
-    })
-}.bind(this))
+    let initpara = {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body)
+    };
 
-global.socket = socket;
+    fetch(url, initpara)
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw response;
+            }
+        }).then((responseJson) => {
+        if (successCallback) {
+            successCallback(responseJson);
+        }
+    }).catch((error) => {
+        if (errorCallback) {
+            errorCallback(error);
+        }
+    });
 
-socket.on('message', function (msg, rinfo) {
-    console.log(msg)
-    // msg = JSON.stringify();
-    console.log(msg.toString())
-    console.log('message was received',msg.content)
-})
+};
+
+export function getCurrentRouteName(navigationState) {
+    if (!navigationState) {
+        return null;
+    }
+    const route = navigationState.routes[navigationState.index];
+    // dive into nested navigators
+    if (route.routes) {
+        return getCurrentRouteName(route);
+    }
+    return route.routeName;
+}
+
+export function dateFormat(date, fmt) {
+    var o = {
+        "M+": date.getMonth() + 1,                 //月份
+        "d+": date.getDate(),                    //日
+        "h+": date.getHours(),                   //小时
+        "m+": date.getMinutes(),                 //分
+        "s+": date.getSeconds(),                 //秒
+        "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+        "S": date.getMilliseconds()             //毫秒
+    };
+    if (/(y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    for (var k in o) {
+        if (new RegExp("(" + k + ")").test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        }
+    }
+    return fmt;
+}
+
+export {Utils};

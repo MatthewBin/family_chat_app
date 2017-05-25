@@ -13,12 +13,14 @@ import {
     Text,
     TouchableOpacity,
     View,
-    Button
+    Button,
+    ToastAndroid
 } from 'react-native';
 
 import {AccentColor, GlobalStyle} from 'GlobalStyle';
 import CommonTextInput from 'CommonTextInput';
 import CommonButton from 'CommonButton';
+import * as Utils from 'Utils';
 
 export default class RegisterPage extends Component {
     static navigationOptions = {
@@ -28,7 +30,7 @@ export default class RegisterPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username:null,
+            username: null,
             email: null,
             code: null,
             pwd: null,
@@ -42,10 +44,25 @@ export default class RegisterPage extends Component {
 
     register() {
         if (this.state.pwd !== this.state.confirm_pwd) {
-            // TODO modal
+            ToastAndroid.show('两次密码不一致', ToastAndroid.SHORT);
             return;
         }
-        // TODO register
+        let {username, email, code, pwd}=this.state;
+        Utils.Utils.postFetch(global.family_url + 'user/register', {
+            username,
+            pwd,
+            email,
+            code
+        }, (success) => {
+            if (success.res_code == 1) {
+                ToastAndroid.show('注册成功', ToastAndroid.SHORT);
+                global.RootNavigator.goBack();
+                return;
+            }
+            ToastAndroid.show('注册失败', ToastAndroid.SHORT);
+        }, (err) => {
+            ToastAndroid.show('注册异常', ToastAndroid.SHORT);
+        });
     }
 
     render() {

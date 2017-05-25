@@ -6,7 +6,6 @@ import com.facebook.react.ReactApplication;
 import com.beefe.picker.PickerViewPackage;
 import com.zhangxu.realpath.RCTRealPathPackage;
 import com.imagepicker.ImagePickerPackage;
-import com.tradle.react.UdpSocketsModule;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -29,8 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new PickerViewPackage(),
             new RCTRealPathPackage(),
-            new ImagePickerPackage(),
-            new UdpSocketsModule()
+            new ImagePickerPackage()
       );
     }
   };

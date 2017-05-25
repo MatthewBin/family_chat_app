@@ -16,24 +16,28 @@ import {
     Platform,
     StatusBar,
     StyleSheet,
-    TouchableOpacity
+    TouchableOpacity,
+    ToastAndroid
 } from 'react-native';
 import {GlobalStyle} from 'GlobalStyle';
 import CommonButton from 'CommonButton';
 import CommonTextInput from 'CommonTextInput';
+import * as Utils from 'Utils';
 
 export default class LoginPage extends Component {
     static navigationOptions = {
-        title:"登录"
-        // header: (navigation) => {
-        //     const left = (<Button onPress={() => navigation.goBack()} title='登录'/>);
-        //     return left;
-        // }
+        // title:"登录",
+        header: (navigation) => {
+            return <Text>登录</Text>;
+        }
     }
 
     constructor(props) {
         super(props);
-        this.state={};
+        this.state={
+            username:null,
+            pwd:null
+        };
     }
 
     render() {
@@ -70,12 +74,31 @@ export default class LoginPage extends Component {
                     style={{ marginTop: 20 }}
                     enable={!!(username && pwd)}
                     text='登录'
-                    onPress={() => {}}/>
+                    onPress={this.login.bind(this)}/>
             </View>
         );
     }
-}
 
+    login(){
+        let {username,pwd}=this.state;
+        Utils.Utils.postFetch(global.family_url + 'user/login', {
+            username,
+            pwd,
+            client:1
+        }, (success) => {
+            if(success.res_code==1){
+                global.token = success.msg;
+                global.RootNavigator.navigate('FriendPage');
+                ToastAndroid.show('登录成功', ToastAndroid.SHORT);
+                return;
+            }
+            ToastAndroid.show(success.msg, ToastAndroid.SHORT);
+        }, (err) => {
+            ToastAndroid.show("登录异常", ToastAndroid.SHORT);
+            console.log(err)
+        });
+    }
+}
 
 const Styles = StyleSheet.create({
     agreement: {

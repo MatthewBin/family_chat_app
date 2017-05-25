@@ -9,25 +9,66 @@ import {
     AppRegistry,
     StyleSheet,
     Text,
-    View
+    View,
+    Alert,
+    Keyboard,
+    Platform,
+    BackHandler,
+    ToastAndroid
 } from 'react-native';
-import Utils from 'Utils';
+import {
+    MainNavigator
+} from 'Router';
+import * as Utils from 'Utils';
 
+import SettingPage from 'SettingPage';
+import FriendPage from 'FriendPage';
+import JoinFamilyPage from 'JoinFamilyPage';
+import LoginPage from 'LoginPage';
+var canExitApp=false;
 export default class family_chat_app extends Component {
+    componentWillMount() {
+        if (Platform.OS === 'android') {
+            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
+        }
+    }
+
+    componentWillUnmount() {
+        if (Platform.OS === 'android') {
+            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid.bind(this));
+        }
+    }
+
+    componentDidMount() {
+        if (this.navigator) {
+            global.RootNavigator = this.navigator._navigation;
+        }
+    }
+
+    onBackAndroid() {
+        console.log('--- back ---')
+        if (canExitApp) {
+            BackHandler.exitApp();
+        } else {
+            canExitApp = true;
+            setTimeout(() => {
+                canExitApp = false;
+            }, 3000);
+            ToastAndroid.show('再按一次退出', ToastAndroid.SHORT);
+        }
+        return true;
+    }
+
+
     render() {
         return (
-            <View style={styles.container}>
-                <Text style={styles.welcome}>
-                    Welcome to React Native!
-                </Text>
-                <Text style={styles.instructions}>
-                    To get started, edit index.ios.js
-                </Text>
-                <Text style={styles.instructions}>
-                    Press Cmd+R to reload,{'\n'}
-                    Cmd+D or shake for dev menu
-                </Text>
-            </View>
+            // <JoinFamilyPage/>
+            <MainNavigator ref={navigator => this.navigator = navigator}
+                           onNavigationStateChange={(prevState, currentState) => {
+                                  const currentScreen = Utils.getCurrentRouteName(currentState);
+                                  const prevScreen = Utils.getCurrentRouteName(prevState);
+                                  global.currentScrern = currentScreen;
+                              }}/>
         );
     }
 }

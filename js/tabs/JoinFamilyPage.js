@@ -34,7 +34,7 @@ const ips = [
 
 export default class JoinFamilyPage extends Component{
     static navigationOptions = {
-        title:'fuck',
+        title:'网络连接',
     }
 
     constructor(props) {
@@ -69,18 +69,18 @@ export default class JoinFamilyPage extends Component{
         let try_count=0;
         if(!global.family_url ){
             let connect_handle = setInterval(function () {
-                try_count = (try_count)%ips.length;
+                let index = (try_count)%ips.length;
                 this.setState({
                     address: ips[try_count],
                     connect_log: '正在连接...'
                 });
-                Utils.Utils.postFetch('http://'+ips[try_count] + ':8675/connect',{},(success)=>{
+                Utils.Utils.postFetch('http://'+ips[index] + ':8675/connect',{},(success)=>{
                     clearInterval(connect_handle);
                     this.setState({
-                        server:ips[try_count],
+                        server:ips[index],
                         connect_log: '成功!'
                     });
-                    global.family_url = 'http://'+ips[try_count] + ':8675/api/';
+                    global.family_url = 'http://'+ips[index] + ':8675/';
                     global.RootNavigator.navigate('LoginPage');
                     // global.RootNavigator.navigate('RegisterPage');
                 },(err)=>{

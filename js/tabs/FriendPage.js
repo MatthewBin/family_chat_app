@@ -12,6 +12,13 @@ import {
 } from 'react-native';
 
 export default class FriendPage extends Component {
+    static navigationOptions = {
+        drawerLabel: 'Family Chat',
+        // drawerIcon: ({ tintColor }) => (
+        //     <Text style={[styles.icon, {tintColor: tintColor}]}
+        //     >a</Text>
+        // )
+    }
     render() {
         return (
             <View style={styles.container}>

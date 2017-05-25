@@ -25,7 +25,7 @@ import SettingPage from 'SettingPage';
 import FriendPage from 'FriendPage';
 import JoinFamilyPage from 'JoinFamilyPage';
 import LoginPage from 'LoginPage';
-
+var canExitApp=false;
 export default class family_chat_app extends Component {
     componentWillMount() {
         if (Platform.OS === 'android') {

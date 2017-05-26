@@ -25,7 +25,7 @@ export default class CommonButton extends Component {
         return (
             <TouchableOpacity
                 activeOpacity={enable ? 0.2 : 1}
-                onPress={onPress}
+                onPress={enable ?onPress:()=>{}}
                 style={currentStyle}>
                 <Text style={currentTextStyle}>
                     {text}

@@ -12,7 +12,6 @@ import {
     View,
     Text,
     Image,
-    Button,
     Platform,
     StatusBar,
     StyleSheet,
@@ -88,7 +87,7 @@ export default class LoginPage extends Component {
         }, (success) => {
             if(success.res_code==1){
                 global.token = success.msg;
-                global.RootNavigator.navigate('FriendPage');
+                global.RootNavigator.goBack();
                 ToastAndroid.show('登录成功', ToastAndroid.SHORT);
                 return;
             }

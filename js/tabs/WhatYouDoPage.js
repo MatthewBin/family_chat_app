@@ -1,7 +1,9 @@
 /**
- * Created by maxiaobin on 17/5/4.
- * @providesModule FriendPage
+ * Created by maxiaobin on 17/5/26.
+ * @providesModule WhatYouDoPage
  */
+'use strict'
+
 import React, {Component} from 'react';
 import {
     AppRegistry,
@@ -11,15 +13,17 @@ import {
     Alert
 } from 'react-native';
 
-export default class FriendPage extends Component {
+export default class WhatYouDoPage extends Component {
     static navigationOptions = {
-        tabBarLabel: '好友',
+        tabBarLabel: '动态',
         tabBarIcon: ({tintColor}) => (
             <Text style={[styles.iconStyle,{color:tintColor,fontSize:20}]}>&#xe606;</Text>),
     }
 
     componentDidMount() {
-
+        if (!global.token) {
+            global.RootNavigator.navigate('LoginPage');
+        }
     }
 
     render() {

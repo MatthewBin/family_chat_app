@@ -17,10 +17,35 @@ import JoinFamilyPage from 'JoinFamilyPage';
 import LoginPage from 'LoginPage';
 import RegisterPage from 'RegisterPage';
 import PersonalInfoPage from 'PersonalInfoPage';
+import ChatPage from 'ChatPage';
+import WhatYouDoPage from 'WhatYouDoPage';
 
-export const FriendNavigator = DrawerNavigator({
+export const ChatNavigator = TabNavigator({
     FriendPage: {
         screen: FriendPage
+    },
+    ChatPage: {
+        screen: ChatPage
+    },
+    WhatYouDoPage: {
+        screen: WhatYouDoPage
+    }
+}, {
+    ...TabNavigator.Presets.iOSBottomTabs,
+    initialRouteName: 'FriendPage',
+    headerMode: 'screen',
+    tabBarOptions: {
+        activeTintColor: '#fc0',
+        activeBackgroundColor: '#000',
+        inactiveTintColor: '#fff',
+        inactiveBackgroundColor: '#000',
+    }
+});
+
+
+export const FriendNavigator = DrawerNavigator({
+    ChatNavigator: {
+        screen: ChatNavigator
     },
     SettingPage: {
         screen: SettingPage
@@ -29,7 +54,7 @@ export const FriendNavigator = DrawerNavigator({
         screen: PersonalInfoPage
     }
 }, {
-    initialRouteName: 'PersonalInfoPage',
+    initialRouteName: 'ChatNavigator',
     headerMode: 'screen',
     drawerWidth: 200,
     drawerPosition: 'left'

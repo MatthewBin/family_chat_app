@@ -10,11 +10,11 @@ import {
     View,
     Text,
     StyleSheet,
-    Button,
     NetInfo,
     ToastAndroid
 }from 'react-native';
 import * as Utils from 'Utils';
+import CommonButton from 'CommonButton';
 
 const ips = [
     // '192.168.1.100',
@@ -32,9 +32,9 @@ const ips = [
     // '192.168.1.110'
 ];
 
-export default class JoinFamilyPage extends Component{
+export default class JoinFamilyPage extends Component {
     static navigationOptions = {
-        title:'网络连接',
+        title: '网络连接',
     }
 
     constructor(props) {
@@ -42,10 +42,11 @@ export default class JoinFamilyPage extends Component{
         this.state = {
             isConnected: null,
             connectionInfo: null,
-            isConnectionExpensive:null,
-            server:'- - - -',
-            address:'- - - -',
-            connect_log:null
+            isConnectionExpensive: null,
+            server: '- - - -',
+            address: '- - - -',
+            connect_log: null,
+            family_url: null
         };
     }
 
@@ -66,28 +67,30 @@ export default class JoinFamilyPage extends Component{
                 this.setState({connectionInfo});
             }
         );
-        let try_count=0;
-        if(!global.family_url ){
+        let try_count = 0;
+        if (!global.family_url) {
             let connect_handle = setInterval(function () {
-                let index = (try_count)%ips.length;
+                let index = (try_count) % ips.length;
                 this.setState({
                     address: ips[try_count],
                     connect_log: '正在连接...'
                 });
-                Utils.Utils.postFetch('http://'+ips[index] + ':8675/connect',{},(success)=>{
+                Utils.Utils.postFetch('http://' + ips[index] + ':8675/connect', {}, (success) => {
                     clearInterval(connect_handle);
                     this.setState({
-                        server:ips[index],
+                        server: ips[index],
                         connect_log: '成功!'
                     });
-                    global.family_url = 'http://'+ips[index] + ':8675/';
-                    global.RootNavigator.navigate('LoginPage');
+                    global.family_url = 'http://' + ips[index] + ':8675/';
+                    this.setState({
+                        family_url: global.family_url
+                    })
                     // global.RootNavigator.navigate('RegisterPage');
-                },(err)=>{
+                }, (err) => {
 
                 });
                 try_count++;
-            }.bind(this),500);
+            }.bind(this), 500);
         }
     }
 
@@ -101,8 +104,8 @@ export default class JoinFamilyPage extends Component{
     _handleConnectivityChange(isConnected) {
         ToastAndroid.show((isConnected ? 'online' : 'offline'), ToastAndroid.SHORT);
         this.setState({
-            isConnectionExpensive:NetInfo.isConnectionExpensive,
-            isConnected:isConnected,
+            isConnectionExpensive: NetInfo.isConnectionExpensive,
+            isConnected: isConnected,
         });
         //检测网络连接信息
         NetInfo.fetch().done(
@@ -137,9 +140,23 @@ export default class JoinFamilyPage extends Component{
                         连接类型：<Text style={styles.text2}>{this.state.connectionInfo}</Text>
                     </Text>
                     <Text style={styles.text1}>
-                        是否计费：<Text style={styles.text2}>{this.state.isConnectionExpensive === true ? '需要计费' : '不计费'}</Text>
+                        是否计费：<Text
+                        style={styles.text2}>{this.state.isConnectionExpensive === true ? '需要计费' : '不计费'}</Text>
                     </Text>
                 </View>
+
+                <CommonButton text='进入 Family Chat'
+                              enable={!!!!this.state.family_url}
+                              onPress={()=>{
+                    global.RootNavigator.navigate("FriendNavigator");
+                }}/>
+                <CommonButton text='登录'
+                              enable={!!this.state.family_url}
+                              onPress={()=>{
+                    if (!global.token) {
+                        global.RootNavigator.navigate('LoginPage');
+                    }
+                }}/>
             </View>
         );
     }
@@ -147,22 +164,22 @@ export default class JoinFamilyPage extends Component{
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop:20,
+        paddingTop: 20,
         flex: 1,
-        alignItems:'center',
+        alignItems: 'center',
         backgroundColor: '#222',
     },
     block: {
-        padding:20,
+        padding: 20,
         alignItems: 'flex-start'
     },
-    text1:{
-        fontSize:18,
-        color:'#EB0',
+    text1: {
+        fontSize: 18,
+        color: '#EB0',
     },
-    text2:{
-        fontSize:18,
-        color:'#61B2A7',
+    text2: {
+        fontSize: 18,
+        color: '#61B2A7',
     },
     iconStyle: {
         color: '#fff',

@@ -18,9 +18,9 @@ import {
     Switch,
     Text,
     TouchableOpacity,
-    Button,
     View
 } from 'react-native';
+import CommonButton from 'CommonButton';
 
 export default class SettingPage extends Component {
     static navigationOptions = {
@@ -52,12 +52,12 @@ export default class SettingPage extends Component {
             <View style={{ flex: 1, backgroundColor: '#fafafa'}}>
                 <Text>没有内容</Text>
                 <View style={Styles.separator}/>
-                <Button
+                <CommonButton
                     style={{
                         marginHorizontal: 15,
                         marginTop: 15
                     }}
-                    title='退出当前帐号'
+                    text='退出当前帐号'
                     onPress={() => {
                         global.token='';
                         global.RootNavigator.navigate('FriendPage');

@@ -13,7 +13,6 @@ import {
     Text,
     TouchableOpacity,
     View,
-    Button,
     ToastAndroid
 } from 'react-native';
 

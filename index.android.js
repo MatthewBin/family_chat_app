@@ -68,6 +68,7 @@ export default class family_chat_app extends Component {
                                   const currentScreen = Utils.getCurrentRouteName(currentState);
                                   const prevScreen = Utils.getCurrentRouteName(prevState);
                                   global.currentScrern = currentScreen;
+                                  console.log(currentScreen)
                               }}/>
         );
     }

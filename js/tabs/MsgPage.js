@@ -1,6 +1,9 @@
 /**
+ * Created by maxiaobin on 17/5/27.
+ */
+/**
  * Created by maxiaobin on 17/5/26.
- * @providesModule WhatYouDoPage
+ * @providesModule MsgPage
  */
 'use strict'
 
@@ -13,16 +16,16 @@ import {
     Alert
 } from 'react-native';
 
-export default class WhatYouDoPage extends Component {
+export default class MsgPage extends Component {
     static navigationOptions = {
-        tabBarLabel: '动态',
+        tabBarLabel: '消息',
         tabBarIcon: ({tintColor}) => (
             <Text style={[styles.iconStyle,{color:tintColor,fontSize:20}]}>&#xe606;</Text>),
-        drawerLabel: '动态'
+        drawerLabel: '消息'
     }
 
-    componentDidMount() {
-        if (!global.token) {
+    componentDidMount(){
+        if(!global.token){
             global.RootNavigator.navigate('LoginPage');
         }
     }

@@ -18,14 +18,16 @@ import LoginPage from 'LoginPage';
 import RegisterPage from 'RegisterPage';
 import PersonalInfoPage from 'PersonalInfoPage';
 import ChatPage from 'ChatPage';
+import MsgPage from 'MsgPage';
 import WhatYouDoPage from 'WhatYouDoPage';
 
+// 主要Tab导航
 export const ChatNavigator = TabNavigator({
     FriendPage: {
         screen: FriendPage
     },
-    ChatPage: {
-        screen: ChatPage
+    MsgPage: {
+        screen: MsgPage
     },
     WhatYouDoPage: {
         screen: WhatYouDoPage
@@ -42,7 +44,7 @@ export const ChatNavigator = TabNavigator({
     }
 });
 
-
+// 侧边导航
 export const FriendNavigator = DrawerNavigator({
     ChatNavigator: {
         screen: ChatNavigator
@@ -60,7 +62,7 @@ export const FriendNavigator = DrawerNavigator({
     drawerPosition: 'left'
 });
 
-
+// 主要登录导航
 export const MainNavigator = StackNavigator({
     JoinFamilyPage: {
         screen: JoinFamilyPage
@@ -74,7 +76,11 @@ export const MainNavigator = StackNavigator({
     FriendNavigator: {
         screen: FriendNavigator
     },
+    ChatPage:{
+        screen:ChatPage
+    }
 }, {
     initialRouteName: 'JoinFamilyPage',
     headerMode: 'none',
 });
+

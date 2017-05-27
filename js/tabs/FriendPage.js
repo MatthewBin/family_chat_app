@@ -16,6 +16,7 @@ export default class FriendPage extends Component {
         tabBarLabel: '好友',
         tabBarIcon: ({tintColor}) => (
             <Text style={[styles.iconStyle,{color:tintColor,fontSize:20}]}>&#xe606;</Text>),
+        drawerLabel: '好友'
     }
 
     componentDidMount() {

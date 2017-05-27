@@ -5,18 +5,6 @@
 'use strict'
 const Utils = {};
 
-import io from 'socket.io-client'
-
-const socket = io('http://192.168.1.23:9521', {
-    transports: ['websocket'],
-    reconnectionDelay:1000,
-    reconnectionDelayMax:5000,
-    timeout:10000
-});
-
-socket.on('connect', function () {
-    socket.emit('test', "Real time baby  ")
-});
 
 Utils.postFetch = function (url, body, successCallback, errorCallback) {
     if (!url || !body) {

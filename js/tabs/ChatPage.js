@@ -18,6 +18,7 @@ export default class ChatPage extends Component {
         tabBarLabel: '聊天',
         tabBarIcon: ({tintColor}) => (
             <Text style={[styles.iconStyle,{color:tintColor,fontSize:20}]}>&#xe606;</Text>),
+        drawerLabel: '聊天'
     }
 
     componentDidMount(){

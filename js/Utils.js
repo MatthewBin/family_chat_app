@@ -54,25 +54,40 @@ export function getCurrentRouteName(navigationState) {
     return route.routeName;
 }
 
-export function dateFormat(date, fmt) {
-    var o = {
-        "M+": date.getMonth() + 1,                 //月份
-        "d+": date.getDate(),                    //日
-        "h+": date.getHours(),                   //小时
-        "m+": date.getMinutes(),                 //分
-        "s+": date.getSeconds(),                 //秒
-        "q+": Math.floor((date.getMonth() + 3) / 3), //季度
-        "S": date.getMilliseconds()             //毫秒
-    };
-    if (/(y+)/.test(fmt)) {
-        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+export function dateFormat(input) {
+    let date = new Date(input);
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let hour = date.getHours();
+    let minute = date.getMinutes();
+    let second = date.getSeconds();
+    return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+}
+
+export function dateFilter(input) {
+    if (input == undefined || input === '') {
+        return "";
     }
-    for (var k in o) {
-        if (new RegExp("(" + k + ")").test(fmt)) {
-            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-        }
+    var mSec_timestamp = (Date.parse(new Date()) - Date.parse(input)) / 1000;
+    if (mSec_timestamp < 3600) {
+        return "1小时之内"
+    } else if (mSec_timestamp > 3600 && mSec_timestamp < 3600 * 2) {
+        return "1小时之前"
+    } else if (mSec_timestamp > 3600 * 2 && mSec_timestamp < 3600 * 3) {
+        return "2小时之前"
+    } else if (mSec_timestamp > 3600 * 3 && mSec_timestamp < 3600 * 24) {
+        return "24小时之内"
+    } else if (mSec_timestamp > 3600 * 24 && mSec_timestamp < 3600 * 24 * 2) {
+        return "1天之前"
+    } else if (mSec_timestamp > 3600 * 24 * 2 && mSec_timestamp < 3600 * 24 * 7) {
+        return "1周之内"
+    } else if (mSec_timestamp > 3600 * 24 * 7 && mSec_timestamp < 3600 * 24 * 14) {
+        return "1周之前"
+    } else {
+        var date = new Date(input);
+        return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
     }
-    return fmt;
 }
 
 export {Utils};

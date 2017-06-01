@@ -48,18 +48,10 @@ export default class PersonalInfoPage extends Component {
     }
 
     componentDidMount() {
-        Utils.Utils.postFetch(global.family_url + 'user/user_info', {
-            token: global.token
-        }, (success) => {
-            if (success.res_code == 1) {
-                this.setState ({
-                    head_img: success.msg.head_img,
-                    nickname: success.msg.nickname,
-                    description: success.msg.description
-                });
-            }
-        }, (err) => {
-
+        this.setState ({
+            head_img: global.head_img,
+            nickname: global.nickname,
+            description: global.description
         });
     }
 

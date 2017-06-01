@@ -155,6 +155,8 @@ export default class JoinFamilyPage extends Component {
                               onPress={()=>{
                     if (!global.token) {
                         global.RootNavigator.navigate('LoginPage');
+                    }else {
+                        ToastAndroid.show("您已登录",ToastAndroid.SHORT);
                     }
                 }}/>
             </View>

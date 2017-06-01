@@ -20,6 +20,7 @@ import {
     MainNavigator
 } from 'Router';
 import * as Utils from 'Utils';
+import Socket from "Socket";
 
 var canExitApp=false;
 export default class family_chat_app extends Component {

@@ -16,7 +16,8 @@ import {
     StatusBar,
     StyleSheet,
     TouchableOpacity,
-    ToastAndroid
+    ToastAndroid,
+    DeviceEventEmitter
 } from 'react-native';
 import {GlobalStyle} from 'GlobalStyle';
 import CommonButton from 'CommonButton';
@@ -34,8 +35,8 @@ export default class LoginPage extends Component {
     constructor(props) {
         super(props);
         this.state={
-            username:null,
-            pwd:null
+            username:'1',
+            pwd:'1'
         };
     }
 
@@ -86,9 +87,11 @@ export default class LoginPage extends Component {
             client:1
         }, (success) => {
             if(success.res_code==1){
-                global.token = success.msg;
+                global.token = success.msg.token;
+                global.userid = success.msg.user_id;
                 global.RootNavigator.goBack();
                 ToastAndroid.show('登录成功', ToastAndroid.SHORT);
+                DeviceEventEmitter.emit('get_info',success.msg.token);
                 return;
             }
             ToastAndroid.show(success.msg, ToastAndroid.SHORT);

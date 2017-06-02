@@ -58,7 +58,6 @@ export default class FriendPage extends Component {
                 this.setState(prevState => ({
                     dataSource: prevState.dataSource.cloneWithRows(success.msg)
                 }));
-
             }
         }, (err) => {
         });
@@ -66,15 +65,20 @@ export default class FriendPage extends Component {
 
     render() {
         return (
-            <ListView style={{ padding: 5, flex: 1 }}
-                      ref="list"
-                      dataSource={this.state.dataSource}
-                      renderRow={this.renderRow.bind(this)}
-                      enableEmptySections={true}
-                      onEndReachedThreshold={50}
-                      onLayout={(event) => {} }
-                      renderFooter={() => {} }
-            />
+            <View style={{ flex: 1 }}>
+                <View style={{height:40,backgroundColor:'#222',justifyContent:'center',alignItems:'center'}}>
+                    <Text style={{color:'#fff',fontSize:20}}>好友列表</Text>
+                </View>
+                <ListView style={{ padding: 5, flex: 1 }}
+                          ref="list"
+                          dataSource={this.state.dataSource}
+                          renderRow={this.renderRow.bind(this)}
+                          enableEmptySections={true}
+                          onEndReachedThreshold={50}
+                          onLayout={(event) => {} }
+                          renderFooter={() => {} }
+                />
+            </View>
         );
     }
 
@@ -82,16 +86,17 @@ export default class FriendPage extends Component {
         if (rowData != undefined) {
             return (
                 <TouchableOpacity key={`${sectionID}-${rowID}`}
-                                  style={{ padding: 2, margin: 2 }}
+                                  style={{ padding: 3, margin: 2,backgroundColor:"#fff"}}
                                   activeOpacity={1}
                                   onPress={this.go_to_chat.bind(this,rowData)}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                        <Image style={{ width: 40, height: 40 }} source={rowData.head_img}/>
-                        <View style={[styles.bold1]}>
-                            <Text style={[styles.msg]}>{rowData.content}</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems:'center' }}>
+                        <Image style={{ width: 60, height: 60,margin:10 }} source={rowData.head_img}/>
+                        <View style={{justifyContent:'center'}}>
+                            <Text style={{ fontSize: 18 ,marginBottom:5}}>{rowData.nickname}</Text>
+                            <Text style={{ color: '#999', fontSize: 14 }}>签名: {rowData.description}</Text>
                         </View>
                     </View>
-                    <Text style={{ textAlign: 'center', color: '#666', fontSize: 12 }}>{rowData.description}</Text>
+
                 </TouchableOpacity>
             );
         } else {
@@ -100,7 +105,7 @@ export default class FriendPage extends Component {
     }
 
     go_to_chat(rowData) {
-        global.current_friend=rowData;
+        global.current_friend = rowData;
         global.RootNavigator.navigate('ChatPage');
     }
 }
@@ -131,28 +136,6 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         flexDirection: 'row',
         alignItems: 'center'
-    },
-    msg: {
-        flex: 1,
-        margin: 8
-    },
-    bold1: {
-        borderColor: '#CCC',
-        borderWidth: 1,
-        borderRadius: 5,
-        marginLeft: 10,
-        marginRight: 80,
-        marginTop: 5,
-        marginBottom: 10
-    },
-    bold2: {
-        borderColor: '#CCC',
-        borderWidth: 1,
-        borderRadius: 5,
-        marginLeft: 80,
-        marginRight: 10,
-        marginTop: 5,
-        marginBottom: 10,
     },
     textInput: {
         marginLeft: -15

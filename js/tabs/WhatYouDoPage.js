@@ -43,8 +43,10 @@ export default class WhatYouDoPage extends Component {
     }
 
     get_recently_list() {
-        Utils.Utils.postFetch(global.family_url + 'user_chat/get_recently_list', {
-            token: global.token
+        Utils.Utils.postFetch(global.family_url + 'user_chat/get_active_list', {
+            token: global.token,
+            page_index:0,
+            page_size:100
         }, (success) => {
             if (success.res_code == 1) {
                 this.setState(prevState => ({

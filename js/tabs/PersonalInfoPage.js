@@ -125,6 +125,7 @@ export default class PersonalInfoPage extends Component {
         }, (success) => {
             if (success.res_code == 1) {
                 ToastAndroid.show('设置成功', ToastAndroid.SHORT);
+                global.head_img=this.state.head_img ;
                 return;
             }
             ToastAndroid.show('设置失败', ToastAndroid.SHORT);

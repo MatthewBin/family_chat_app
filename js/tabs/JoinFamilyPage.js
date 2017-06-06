@@ -76,6 +76,7 @@ export default class JoinFamilyPage extends Component {
                     connect_log: '正在连接...'
                 });
                 Utils.Utils.postFetch('http://' + ips[index] + ':8675/connect', {}, (success) => {
+                    clearInterval(connect_handle);
                     this.setState({
                         server: ips[index],
                         connect_log: '成功!'

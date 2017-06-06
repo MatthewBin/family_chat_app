@@ -17,7 +17,8 @@ import {
     StyleSheet,
     TouchableOpacity,
     ToastAndroid,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    Keyboard
 } from 'react-native';
 import {GlobalStyle} from 'GlobalStyle';
 import CommonButton from 'CommonButton';
@@ -81,6 +82,7 @@ export default class LoginPage extends Component {
     }
 
     login(){
+        Keyboard.dismiss();
         let {username,pwd}=this.state;
         Utils.Utils.postFetch(global.family_url + 'user/login', {
             username,

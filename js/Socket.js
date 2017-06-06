@@ -42,7 +42,11 @@ DeviceEventEmitter.addListener('get_info', (token) => {
         socket.emit('online', {
             user_id: global.userid,
             nickname: global.nickname
-        })
+        });
+        socket.on(global.userid, function (info) {
+            DeviceEventEmitter.emit('chat', info);
+        });
+
     }, (err) => {
 
     });

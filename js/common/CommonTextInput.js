@@ -13,8 +13,7 @@ import React, {
 import {
     Platform,
     Text,
-    TextInput,
-    Keyboard
+    TextInput
 } from 'react-native';
 
 export default class CommonTextInput extends Component {
@@ -50,7 +49,6 @@ export default class CommonTextInput extends Component {
                   letterSpacing: 1,
                   color: '#333333'
                 }, style]}
-                onBlur={()=>{Keyboard.dismiss()}}
                 autoCapitalize='none'
                 autoCorrect={false}
                 placeholder={placeholder}/>

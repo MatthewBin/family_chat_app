@@ -46,8 +46,7 @@ export const GlobalStyle = StyleSheet.create({
         // fontFamily: "dscj-appfont",
     },
     textInputContainer: {
-        height: 65,
-        paddingVertical: 12,
+        paddingVertical: 2,
         borderRadius: 5,
         backgroundColor: 'white',
         flexDirection: 'row',

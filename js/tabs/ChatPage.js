@@ -14,7 +14,10 @@ import {
     ListView,
     RefreshControl,
     TouchableOpacity,
-    Image
+    Image,
+    Keyboard,
+    DeviceEventEmitter,
+    Vibration
 } from 'react-native';
 
 import CommonTextInput from 'CommonTextInput';
@@ -33,8 +36,8 @@ export default class ChatPage extends Component {
         this.state = {
             dataSource: ds.cloneWithRows([]),
             isRefreshing: false,
-            msg: null,
-            refresh_title:'查看更多'
+            msg: '',
+            refresh_title: '查看更多'
         };
 
         this.currentPageIndex = 0;
@@ -46,6 +49,20 @@ export default class ChatPage extends Component {
     }
 
     componentDidMount() {
+        DeviceEventEmitter.addListener('chat', (info) => {
+            if(info.from_user_id == global.current_friend.id){
+                if(global.currentScrern == "ChatPage"){
+                    Utils.Utils.postFetch(global.family_url + 'user_chat/set_is_read', {
+                        token: global.token,
+                        from_uid:global.current_friend.id
+                    }, (success) => {
+                    }, (err) => {
+                    });
+                }
+                this.get_last_msg();
+                Vibration.vibrate();
+            }
+        });
         this.loadMore();
     }
 
@@ -58,6 +75,15 @@ export default class ChatPage extends Component {
                 this.lastY = scrollDistance;
             }
         }
+    }
+
+    componentWillUnmount(){
+        Utils.Utils.postFetch(global.family_url + 'user_chat/set_is_read', {
+            token: global.token,
+            from_uid:global.current_friend.id
+        }, (success) => {
+        }, (err) => {
+        });
     }
 
     render() {
@@ -119,7 +145,8 @@ export default class ChatPage extends Component {
                                   activeOpacity={1}
                                   onLongPress={() => this.setState({ delModal: true, delRow: rowData })}>
                     <View>
-                        <Text style={{ textAlign: 'center', color: '#666', fontSize: 12 }}>{Utils.dateFormat(rowData.create_time)}</Text>
+                        <Text
+                            style={{ textAlign: 'center', color: '#666', fontSize: 12 }}>{Utils.dateFormat(rowData.create_time)}</Text>
                         {rowData.to_uid != global.current_friend.id ?
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                                 <Image style={{ width: 40, height: 40 }} source={global.current_friend.head_img}/>
@@ -129,7 +156,8 @@ export default class ChatPage extends Component {
                             </View> :
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                                 <View style={[styles.bold2, { backgroundColor: 'white' }]}>
-                                    <Text style={[styles.msg, { textAlign: 'left' }]}>{rowData.content.toString().replace(/&nbsp;/g, " ")}</Text>
+                                    <Text
+                                        style={[styles.msg, { textAlign: 'left' }]}>{rowData.content.toString().replace(/&nbsp;/g, " ")}</Text>
                                 </View>
                                 <Image style={{ width: 40, height: 40 }} source={global.head_img}/>
                             </View>
@@ -157,7 +185,7 @@ export default class ChatPage extends Component {
         }, (success) => {
             if (success.res_code == 1) {
                 this.setState({
-                    refresh_title:'没有更多了'
+                    refresh_title: '没有更多了'
                 })
                 if (success.msg.length > 0) {
                     this.currentPageIndex++;
@@ -165,7 +193,7 @@ export default class ChatPage extends Component {
                     this.datasource = newlist.concat(this.datasource);
                     this.setState(prevState => ({
                         dataSource: prevState.dataSource.cloneWithRows(this.datasource),
-                        refresh_title:'查看更多'
+                        refresh_title: '查看更多'
                     }));
                 }
                 this.lockmore = false;
@@ -178,6 +206,7 @@ export default class ChatPage extends Component {
     }
 
     sendMsg() {
+        Keyboard.dismiss();
         let check_msg = this.state.msg.concat();
         if (check_msg.replace('/\s/g', '') != '') {
             Utils.Utils.postFetch(global.family_url + 'user_chat/send_msg', {
@@ -195,9 +224,26 @@ export default class ChatPage extends Component {
             }, (err) => {
                 console.log(err)
             });
-
+            this.setState({msg: ''});
             this.input.clear();
         }
+    }
+
+    get_last_msg(){
+        Utils.Utils.postFetch(global.family_url + 'user_chat/get_last_msg', {
+            token: token,
+            from_uid: global.current_friend.id
+        }, (success) => {
+            if (success.res_code == 1) {
+                let temp = this.datasource.slice();
+                temp.push(success.msg);
+                this.datasource.push(success.msg);
+                this.setState(prevState => ({dataSource: prevState.dataSource.cloneWithRows(temp)}));
+                this.gotoLast = true;
+            }
+        }, (err) => {
+            console.log(err)
+        });
     }
 }
 

@@ -15,7 +15,8 @@ import {
     RefreshControl,
     TouchableOpacity,
     Image,
-    ToastAndroid
+    ToastAndroid,
+    Keyboard
 } from 'react-native';
 
 import CommonTextInput from 'CommonTextInput';
@@ -34,6 +35,7 @@ export default class WhatYouDoPage extends Component {
         this.state = {
             dataSource: ds.cloneWithRows([]),
             isRefreshing: false,
+            isLoadAll: false,
             msg: ''
         };
 
@@ -83,13 +85,17 @@ export default class WhatYouDoPage extends Component {
                         <Text style={{ fontSize: 20 ,marginHorizontal:10}}>发送</Text>
                     </TouchableOpacity>
                 </View>
-                <ListView style={{ padding: 5, flex: 1 }}
+                <ListView style={{ padding: 5, flex: 1 ,height:200}}
                           ref="list"
                           dataSource={this.state.dataSource}
                           renderRow={this.renderRow.bind(this)}
                           enableEmptySections={true}
                           onEndReached={this.endReached.bind(this)}
-                          onEndReachedThreshold="20"
+                          renderFooter={ ()=>{
+                              return ( <View style={{justifyContent:'center',alignItems:'center',backgroundColor:"#fff"}}>
+                                            <Text style={{color:'#ccc'}}>{this.state.isLoadAll ? '已加载全部' : '正在加载更多……'}</Text>
+                                       </View>)
+                          } }
                           refreshControl={<RefreshControl
                               refreshing={this.state.isRefreshing}
                               onRefresh={this.refresh.bind(this)}
@@ -126,6 +132,7 @@ export default class WhatYouDoPage extends Component {
     }
 
     sendActive() {
+        Keyboard.dismiss();
         let check_msg = this.state.msg.concat();
         if (check_msg.replace('/\s/g', '') != '') {
             Utils.Utils.postFetch(global.family_url + 'user_chat/send_active', {
@@ -133,10 +140,10 @@ export default class WhatYouDoPage extends Component {
                 content: this.state.msg
             }, (success) => {
                 if (success.res_code == 1) {
-                    let temp =[success.msg].concat(this.datasource);
-                    this.datasource=temp;
+                    let temp = [success.msg].concat(this.datasource);
+                    this.datasource = temp;
                     this.setState(prevState => ({dataSource: prevState.dataSource.cloneWithRows(temp)}));
-                    ToastAndroid.show('发表成功',ToastAndroid.SHORT);
+                    ToastAndroid.show('发表成功', ToastAndroid.SHORT);
                 }
             }, (err) => {
                 console.log(err)
@@ -150,9 +157,7 @@ export default class WhatYouDoPage extends Component {
         if (this.lockmore) {
             return;
         }
-
         this.lockmore = true;
-        this.setState({isRefreshing: true});
         Utils.Utils.postFetch(global.family_url + 'user_chat/get_active_list', {
             token: global.token,
             page_index: this.currentPageIndex,
@@ -166,35 +171,34 @@ export default class WhatYouDoPage extends Component {
                     this.setState(prevState => ({
                         dataSource: prevState.dataSource.cloneWithRows(this.datasource)
                     }));
+                } else {
+                    this.setState({isLoadAll: true});
                 }
             }
-            this.setState({isRefreshing: false});
+            this.lockmore = false;
         }, (err) => {
-            this.setState({isRefreshing: false});
             console.log(err)
         });
     }
 
-    refresh(){
-        this.currentPageIndex=0;
+    refresh() {
+        this.setState({isLoadAll: false});
+        this.currentPageIndex = 0;
         Utils.Utils.postFetch(global.family_url + 'user_chat/get_active_list', {
             token: global.token,
             page_index: this.currentPageIndex,
             page_size: this.pageSize
         }, (success) => {
             if (success.res_code == 1) {
-                this.setState({
-                    refresh_title:'没有更多了'
-                })
                 if (success.msg.length > 0) {
                     this.currentPageIndex++;
                     this.datasource = success.msg;
                     this.setState(prevState => ({
                         dataSource: prevState.dataSource.cloneWithRows(this.datasource),
-                        refresh_title:'查看更多'
                     }));
+                } else {
+                    this.setState({isLoadAll: true});
                 }
-                this.lockmore = false;
             }
             this.setState({isRefreshing: false});
         }, (err) => {

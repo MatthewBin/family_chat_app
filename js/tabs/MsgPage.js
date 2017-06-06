@@ -15,7 +15,9 @@ import {
     ListView,
     RefreshControl,
     TouchableOpacity,
-    Image
+    Image,
+    DeviceEventEmitter,
+    ToastAndroid
 } from 'react-native';
 
 import * as Utils from 'Utils';
@@ -37,6 +39,11 @@ export default class MsgPage extends Component {
     }
 
     componentDidMount() {
+        DeviceEventEmitter.addListener('chat', (msg) => {
+            if(global.currentScrern == "MsgPage"){
+                this.get_recently_list();
+            }
+        });
         this.get_recently_list();
     }
 
@@ -99,6 +106,13 @@ export default class MsgPage extends Component {
             id: rowData.from_uid == global.userid ? rowData.to_uid : rowData.from_uid,
             head_img: rowData.head_img
         };
+        Utils.Utils.postFetch(global.family_url + 'user_chat/set_is_read', {
+            token: global.token,
+            from_uid:global.current_friend.id
+        }, (success) => {
+        }, (err) => {
+        });
+        this.get_recently_list();
         global.RootNavigator.navigate('ChatPage');
     }
 }

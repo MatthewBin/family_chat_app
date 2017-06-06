@@ -20,7 +20,8 @@ import {
     DatePickerAndroid,
     DatePickerIOS,
     Alert,
-    ToastAndroid
+    ToastAndroid,
+    Keyboard
 } from 'react-native';
 
 import {GlobalStyle} from 'GlobalStyle';
@@ -117,6 +118,7 @@ export default class PersonalInfoPage extends Component {
     }
 
     save_info() {
+        Keyboard.dismiss();
         Utils.Utils.postFetch(global.family_url + 'user/set_info', {
             token: global.token,
             head_img: this.state.head_img,
@@ -136,6 +138,7 @@ export default class PersonalInfoPage extends Component {
     }
 
     selectPhotoTapped() {
+        Keyboard.dismiss();
         let options = {
             title: "选择头像",
             cancelButtonTitle: "取消",

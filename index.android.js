@@ -42,8 +42,11 @@ export default class family_chat_app extends Component {
         }
     }
 
+    componentWillUnmount(){
+        Socket.close();
+    }
+
     onBackAndroid() {
-        console.log('--- back ---')
         if (canExitApp) {
             BackHandler.exitApp();
         } else {

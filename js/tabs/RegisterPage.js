@@ -13,7 +13,8 @@ import {
     Text,
     TouchableOpacity,
     View,
-    ToastAndroid
+    ToastAndroid,
+    Keyboard
 } from 'react-native';
 
 import {AccentColor, GlobalStyle} from 'GlobalStyle';
@@ -42,6 +43,7 @@ export default class RegisterPage extends Component {
     }
 
     register() {
+        Keyboard.dismiss();
         if (this.state.pwd !== this.state.confirm_pwd) {
             ToastAndroid.show('两次密码不一致', ToastAndroid.SHORT);
             return;
@@ -74,7 +76,7 @@ export default class RegisterPage extends Component {
 			}]}>
                 <View style={[GlobalStyle.textInputContainer, {
 					flexDirection: 'column',
-					height: 250
+					height: 300
 				}]}>
                     <CommonTextInput
                         onChangeText={username => this.setState({ username })}

@@ -34,15 +34,9 @@ export default class FriendPage extends Component {
     }
 
     componentDidMount() {
-        if (!global.token) {
-            global.RootNavigator.navigate('LoginPage');
-            return;
-        }
-        else {
-            DeviceEventEmitter.addListener('notify', (msg) => {
-                this.get_friend_list();
-            });
-        }
+        DeviceEventEmitter.addListener('notify', (msg) => {
+            this.get_friend_list();
+        });
         this.get_friend_list();
     }
 

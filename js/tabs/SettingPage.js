@@ -60,7 +60,7 @@ export default class SettingPage extends Component {
                     text='退出当前帐号'
                     onPress={() => {
                         global.token='';
-                        global.RootNavigator.navigate('FriendPage');
+                        global.RootNavigator.navigate('JoinFamilyPage');
                     }}/>
             </View>
         );

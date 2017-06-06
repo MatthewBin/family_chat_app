@@ -33,7 +33,8 @@ export default class ChatPage extends Component {
         this.state = {
             dataSource: ds.cloneWithRows([]),
             isRefreshing: false,
-            msg: null
+            msg: null,
+            refresh_title:'查看更多'
         };
 
         this.currentPageIndex = 0;
@@ -45,10 +46,6 @@ export default class ChatPage extends Component {
     }
 
     componentDidMount() {
-        if (!global.token) {
-            global.RootNavigator.navigate('LoginPage');
-            return;
-        }
         this.loadMore();
     }
 
@@ -90,7 +87,7 @@ export default class ChatPage extends Component {
                               refreshing={this.state.isRefreshing}
                               onRefresh={this.loadMore.bind(this)}
                               tintColor="#000000"
-                              title='查看更多'
+                              title={this.state.refresh_title}
                               titleColor="#000000"
                               colors={['#000000']}
                               progressBackgroundColor="#ffffff"/>
@@ -122,8 +119,7 @@ export default class ChatPage extends Component {
                                   activeOpacity={1}
                                   onLongPress={() => this.setState({ delModal: true, delRow: rowData })}>
                     <View>
-                        <Text
-                            style={{ textAlign: 'center', color: '#666', fontSize: 12 }}>{Utils.dateFormat(rowData.create_time)}</Text>
+                        <Text style={{ textAlign: 'center', color: '#666', fontSize: 12 }}>{Utils.dateFormat(rowData.create_time)}</Text>
                         {rowData.to_uid != global.current_friend.id ?
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                                 <Image style={{ width: 40, height: 40 }} source={global.current_friend.head_img}/>
@@ -133,8 +129,7 @@ export default class ChatPage extends Component {
                             </View> :
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                                 <View style={[styles.bold2, { backgroundColor: 'white' }]}>
-                                    <Text
-                                        style={[styles.msg, { textAlign: 'right' }]}>{rowData.content.toString().replace(/&nbsp;/g, " ")}</Text>
+                                    <Text style={[styles.msg, { textAlign: 'left' }]}>{rowData.content.toString().replace(/&nbsp;/g, " ")}</Text>
                                 </View>
                                 <Image style={{ width: 40, height: 40 }} source={global.head_img}/>
                             </View>
@@ -161,12 +156,16 @@ export default class ChatPage extends Component {
             page_size: this.pageSize
         }, (success) => {
             if (success.res_code == 1) {
+                this.setState({
+                    refresh_title:'没有更多了'
+                })
                 if (success.msg.length > 0) {
                     this.currentPageIndex++;
                     let newlist = success.msg.reverse();
                     this.datasource = newlist.concat(this.datasource);
                     this.setState(prevState => ({
-                        dataSource: prevState.dataSource.cloneWithRows(this.datasource)
+                        dataSource: prevState.dataSource.cloneWithRows(this.datasource),
+                        refresh_title:'查看更多'
                     }));
                 }
                 this.lockmore = false;
@@ -225,7 +224,7 @@ const styles = StyleSheet.create({
         borderTopWidth: StyleSheet.hairlineWidth,
         borderTopColor: '#CCC',
         paddingHorizontal: 5,
-        paddingVertical: 5,
+        paddingVertical: 1,
         flexDirection: 'row',
         alignItems: 'center'
     },

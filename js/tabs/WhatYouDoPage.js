@@ -14,9 +14,11 @@ import {
     ListView,
     RefreshControl,
     TouchableOpacity,
-    Image
+    Image,
+    ToastAndroid
 } from 'react-native';
 
+import CommonTextInput from 'CommonTextInput';
 import * as Utils from 'Utils';
 export default class WhatYouDoPage extends Component {
     static navigationOptions = {
@@ -30,74 +32,175 @@ export default class WhatYouDoPage extends Component {
         super(props);
         let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            dataSource: ds.cloneWithRows([])
+            dataSource: ds.cloneWithRows([]),
+            isRefreshing: false,
+            msg: ''
         };
+
+        this.currentPageIndex = 0;
+        this.pageSize = 5;
+        this.datasource = [];
+        this.lockmore = false;
+        this.gotoLast = true;
+        this.lastY = 0;
     }
 
     componentDidMount() {
-        if (!global.token) {
-            global.RootNavigator.navigate('LoginPage');
-            return;
-        }
-        this.get_recently_list();
+        this.refresh();
     }
 
-    get_recently_list() {
-        Utils.Utils.postFetch(global.family_url + 'user_chat/get_active_list', {
-            token: global.token,
-            page_index:0,
-            page_size:100
-        }, (success) => {
-            if (success.res_code == 1) {
-                this.setState(prevState => ({
-                    dataSource: prevState.dataSource.cloneWithRows(success.msg)
-                }));
+    componentDidUpdate() {
+        if (this.gotoLast && "listHeight" in this.state && "footerY" in this.state && this.state.footerY > this.state.listHeight) {
+            let scrollDistance = this.state.listHeight - this.state.footerY;
+            if (this.lastY != scrollDistance) {
+                this.refs.list.scrollTo({x: 0, y: -scrollDistance, animated: true});
+                this.gotoLast = false;
+                this.lastY = scrollDistance;
             }
-        }, (err) => {
-        });
+        }
     }
+
 
     render() {
         return (
-            <ListView style={{ padding: 5, flex: 1 }}
-                      ref="list"
-                      dataSource={this.state.dataSource}
-                      renderRow={this.renderRow.bind(this)}
-                      enableEmptySections={true}
-                      onEndReachedThreshold={50}
-                      onLayout={(event) => {} }
-                      renderFooter={() => {} }
-            />
+            <View style={{ flex: 1 }}>
+                <View style={{height:40,backgroundColor:'#222',justifyContent:'center',alignItems:'center'}}>
+                    <Text style={{color:'#fff',fontSize:20}}>好友动态</Text>
+                </View>
+                <View style={{height:80,backgroundColor:'#fff',flexDirection:'row'}}>
+                    <Image style={{ width: 80, height: 80}} source={global.head_img}/>
+                    <CommonTextInput
+                        style={styles.textInput}
+                        ref={(ref) => this.input = ref}
+                        onChangeText={msg => this.setState({ msg })}
+                        keyboardType='default'
+                        multiline={true}
+                        maxLength={500}
+                        placeholder='发表一下动态吧...'/>
+                    <TouchableOpacity style={{ padding: 5,backgroundColor:'#eee' ,justifyContent:'center'}}
+                                      activeOpacity={1}
+                                      onPress={this.sendActive.bind(this)}>
+                        <Text style={{ fontSize: 20 ,marginHorizontal:10}}>发送</Text>
+                    </TouchableOpacity>
+                </View>
+                <ListView style={{ padding: 5, flex: 1 }}
+                          ref="list"
+                          dataSource={this.state.dataSource}
+                          renderRow={this.renderRow.bind(this)}
+                          enableEmptySections={true}
+                          onEndReached={this.endReached.bind(this)}
+                          onEndReachedThreshold="20"
+                          refreshControl={<RefreshControl
+                              refreshing={this.state.isRefreshing}
+                              onRefresh={this.refresh.bind(this)}
+                              tintColor="#000000"
+                              title='刷新'
+                              titleColor="#000000"
+                              colors={['#000000']}
+                              progressBackgroundColor="#ffffff"/>
+                          }
+                />
+            </View>
         );
     }
 
     renderRow(rowData, sectionID, rowID, highlightRow) {
         if (rowData != undefined) {
             return (
-                <TouchableOpacity key={`${sectionID}-${rowID}`}
-                                  style={{ padding: 2, margin: 2 }}
-                                  activeOpacity={1}
-                                  onPress={this.go_to_chat.bind(this,rowData)}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                        <Image style={{ width: 40, height: 40 }} source={rowData.head_img}/>
-                        <View style={[styles.bold1]}>
-                            <Text style={[styles.msg]}>{rowData.content}</Text>
+                <View
+                    style={{ padding: 2, margin: 2,backgroundColor:"#fff",flexDirection: 'row', justifyContent: 'flex-start' }}>
+                    <Image style={{ width: 40, height: 40,marginRight:15}} source={rowData.head_img}/>
+                    <View style={{justifyContent:'center',flex:1}}>
+                        <View style={{height:40,justifyContent:'center'}}>
+                            <Text style={{ fontSize: 20 ,marginBottom:5}}>{rowData.nickname}</Text>
                         </View>
+                        <Text style={{ color: '#999', fontSize: 14 }}>{rowData.content}</Text>
+                        <Text
+                            style={{ textAlign: 'left', color: '#999', marginTop:10, fontSize: 10 }}>{Utils.dateFormat(rowData.create_time)}</Text>
                     </View>
-                    <Text style={{ textAlign: 'center', color: '#666', fontSize: 12 }}>{rowData.description}</Text>
-                </TouchableOpacity>
+                </View>
             );
         } else {
             return null;
         }
     }
 
-    go_to_chat(rowData) {
-        global.current_friend = {
-            id: rowData.from_uid == global.userid ? rowData.to_uid : rowData.from_uid,
-            head_img: rowData.head_img
-        };
-        global.RootNavigator.navigate('ChatPage');
+    sendActive() {
+        let check_msg = this.state.msg.concat();
+        if (check_msg.replace('/\s/g', '') != '') {
+            Utils.Utils.postFetch(global.family_url + 'user_chat/send_active', {
+                token: token,
+                content: this.state.msg
+            }, (success) => {
+                if (success.res_code == 1) {
+                    let temp =[success.msg].concat(this.datasource);
+                    this.datasource=temp;
+                    this.setState(prevState => ({dataSource: prevState.dataSource.cloneWithRows(temp)}));
+                    ToastAndroid.show('发表成功',ToastAndroid.SHORT);
+                }
+            }, (err) => {
+                console.log(err)
+            });
+
+            this.input.clear();
+        }
+    }
+
+    endReached() {
+        if (this.lockmore) {
+            return;
+        }
+
+        this.lockmore = true;
+        this.setState({isRefreshing: true});
+        Utils.Utils.postFetch(global.family_url + 'user_chat/get_active_list', {
+            token: global.token,
+            page_index: this.currentPageIndex,
+            page_size: this.pageSize
+        }, (success) => {
+            if (success.res_code == 1) {
+                if (success.msg.length > 0) {
+                    this.currentPageIndex++;
+                    let newlist = success.msg;
+                    this.datasource = this.datasource.concat(newlist);
+                    this.setState(prevState => ({
+                        dataSource: prevState.dataSource.cloneWithRows(this.datasource)
+                    }));
+                }
+            }
+            this.setState({isRefreshing: false});
+        }, (err) => {
+            this.setState({isRefreshing: false});
+            console.log(err)
+        });
+    }
+
+    refresh(){
+        this.currentPageIndex=0;
+        Utils.Utils.postFetch(global.family_url + 'user_chat/get_active_list', {
+            token: global.token,
+            page_index: this.currentPageIndex,
+            page_size: this.pageSize
+        }, (success) => {
+            if (success.res_code == 1) {
+                this.setState({
+                    refresh_title:'没有更多了'
+                })
+                if (success.msg.length > 0) {
+                    this.currentPageIndex++;
+                    this.datasource = success.msg;
+                    this.setState(prevState => ({
+                        dataSource: prevState.dataSource.cloneWithRows(this.datasource),
+                        refresh_title:'查看更多'
+                    }));
+                }
+                this.lockmore = false;
+            }
+            this.setState({isRefreshing: false});
+        }, (err) => {
+            this.setState({isRefreshing: false});
+            console.log(err)
+        });
     }
 }
 

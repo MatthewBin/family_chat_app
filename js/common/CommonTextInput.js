@@ -13,7 +13,8 @@ import React, {
 import {
     Platform,
     Text,
-    TextInput
+    TextInput,
+    Keyboard
 } from 'react-native';
 
 export default class CommonTextInput extends Component {
@@ -39,16 +40,17 @@ export default class CommonTextInput extends Component {
                 multiline={multiline}
                 underlineColorAndroid='transparent'
                 style={[{
-          flex: 1,
-          alignSelf: 'stretch',
-          fontFamily: 'PingFang SC',
-          paddingHorizontal: 20,
-          marginVertical: Platform.OS === 'android' ? 0 : 0,
-          fontSize: 16,
-          lineHeight: 23,
-          letterSpacing: 1,
-          color: '#333333'
-        }, style]}
+                  flex: 1,
+                  alignSelf: 'stretch',
+                  fontFamily: 'PingFang SC',
+                  paddingHorizontal: 20,
+                  marginVertical: Platform.OS === 'android' ? 0 : 0,
+                  fontSize: 16,
+                  lineHeight: 23,
+                  letterSpacing: 1,
+                  color: '#333333'
+                }, style]}
+                onBlur={()=>{Keyboard.dismiss()}}
                 autoCapitalize='none'
                 autoCorrect={false}
                 placeholder={placeholder}/>

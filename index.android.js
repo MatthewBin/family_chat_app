@@ -64,8 +64,15 @@ export default class family_chat_app extends Component {
                            onNavigationStateChange={(prevState, currentState) => {
                                   const currentScreen = Utils.getCurrentRouteName(currentState);
                                   const prevScreen = Utils.getCurrentRouteName(prevState);
+                                  global.prevScreen = prevScreen
                                   global.currentScrern = currentScreen;
                                   console.log(currentScreen)
+
+                                  if(global.prevScreen == "LoginPage" && global.token){
+                                      global.RootNavigator.navigate("FriendNavigator");
+                                      return;
+                                  }
+
                               }}/>
         );
     }

@@ -76,7 +76,6 @@ export default class JoinFamilyPage extends Component {
                     connect_log: '正在连接...'
                 });
                 Utils.Utils.postFetch('http://' + ips[index] + ':8675/connect', {}, (success) => {
-                    clearInterval(connect_handle);
                     this.setState({
                         server: ips[index],
                         connect_log: '成功!'
@@ -85,12 +84,11 @@ export default class JoinFamilyPage extends Component {
                     this.setState({
                         family_url: global.family_url
                     })
-                    // global.RootNavigator.navigate('RegisterPage');
                 }, (err) => {
 
                 });
                 try_count++;
-            }.bind(this), 500);
+            }.bind(this), 1000);
         }
     }
 
@@ -118,11 +116,11 @@ export default class JoinFamilyPage extends Component {
     render() {
         return (
             <View style={[styles.container]}>
-                <Text style={[styles.text1,{fontSize:30,textAlign:'center'}]}>FamilyStorage</Text>
+                <Text style={[styles.text1,{fontSize:30,textAlign:'center'}]}>Family Chat</Text>
 
                 <View style={[styles.block]}>
                     <Text style={styles.text1}>
-                        服务器地址：<Text style={styles.text2}>{this.state.server}</Text>
+                        服务地址：<Text style={styles.text2}>{this.state.server}</Text>
                     </Text>
                     <Text style={styles.text1}>
                         尝试连接：<Text style={styles.text2}>{this.state.address}</Text>
@@ -146,19 +144,25 @@ export default class JoinFamilyPage extends Component {
                 </View>
 
                 <CommonButton text='进入 Family Chat'
-                              enable={!!!!this.state.family_url}
-                              onPress={()=>{
-                    global.RootNavigator.navigate("FriendNavigator");
-                }}/>
-                <CommonButton text='登录'
                               enable={!!this.state.family_url}
                               onPress={()=>{
-                    if (!global.token) {
-                        global.RootNavigator.navigate('LoginPage');
-                    }else {
-                        ToastAndroid.show("您已登录",ToastAndroid.SHORT);
-                    }
+                                  if (!global.token) {
+                                        global.RootNavigator.navigate('LoginPage');
+                                    }else {
+                                        global.RootNavigator.navigate("FriendNavigator");
+                                    }
+
                 }}/>
+                {/*<CommonButton text='登录'*/}
+                              {/*style={{marginTop:20}}*/}
+                              {/*enable={!!this.state.family_url}*/}
+                              {/*onPress={()=>{*/}
+                    {/*if (!global.token) {*/}
+                        {/*global.RootNavigator.navigate('LoginPage');*/}
+                    {/*}else {*/}
+                        {/*ToastAndroid.show("您已登录",ToastAndroid.SHORT);*/}
+                    {/*}*/}
+                {/*}}/>*/}
             </View>
         );
     }
@@ -166,9 +170,8 @@ export default class JoinFamilyPage extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 20,
+        padding: 20,
         flex: 1,
-        alignItems: 'center',
         backgroundColor: '#222',
     },
     block: {

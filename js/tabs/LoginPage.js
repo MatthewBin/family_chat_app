@@ -45,6 +45,7 @@ export default class LoginPage extends Component {
         const {username,pwd}=this.state;
         return (
             <View>
+                <Text style={{textAlign:'center',fontSize:20,margin:20}}>欢迎登录FC</Text>
                 <View
                     style={[GlobalStyle.textInputContainer, { flexDirection: 'column',height: 130, paddingHorizontal: 20, justifyContent: 'center'}]}>
                     <View style={{flexDirection: 'row',alignItems: 'center'}}>

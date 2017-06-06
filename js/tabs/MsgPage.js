@@ -37,10 +37,6 @@ export default class MsgPage extends Component {
     }
 
     componentDidMount() {
-        if (!global.token) {
-            global.RootNavigator.navigate('LoginPage');
-            return;
-        }
         this.get_recently_list();
     }
 
@@ -89,7 +85,7 @@ export default class MsgPage extends Component {
                             <Text style={{ fontSize: 18 ,marginBottom:5}}>{rowData.nickname}</Text>
                             <Text style={{ color: '#999', fontSize: 14 }}>{rowData.content}</Text>
                         </View>
-                        <View style={{margin:5,width:16,height:16,borderRadius:8,backgroundColor:rowData.is_read?'#f000':'#f00'}}/>
+                        <View style={{margin:5,width:16,height:16,borderRadius:8,backgroundColor:((!rowData.is_read) && rowData.to_uid == global.userid)?'#f00':'#f000'}}/>
                     </View>
                 </TouchableOpacity>
             );

@@ -17,18 +17,21 @@ import {
     TouchableOpacity,
     Image,
     DeviceEventEmitter,
-    ToastAndroid
+    ToastAndroid,
+    Dimensions
 } from 'react-native';
 
 import {GlobalStyle} from 'GlobalStyle';
 import {ICON} from 'GlobalString';
 import * as Utils from 'Utils';
 
+const {height, width} = Dimensions.get('window');
+
 export default class MsgPage extends Component {
     static navigationOptions = {
         tabBarLabel: '消息',
         tabBarIcon: ({tintColor}) => (
-            <Text style={[GlobalStyle.iconFontFamily,{color:tintColor,fontSize:20}]}>{ICON.CHAT}</Text>),
+            <Text style={[GlobalStyle.iconFontFamily,{color:tintColor,fontSize:28,margin:10}]}>{ICON.CHAT}</Text>),
         drawerLabel: '消息'
     }
 
@@ -65,10 +68,13 @@ export default class MsgPage extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <View style={{height:40,backgroundColor:'#222',justifyContent:'center',alignItems:'center'}}>
-                    <Text style={{color:'#fff',fontSize:20}}>消息列表</Text>
+                <View style={{height:40,backgroundColor:'#13b7f6',justifyContent:'center',alignItems:'center'}}>
+                    <Text style={{color:'#fff',fontSize:20}}>
+                        <Text style={[GlobalStyle.iconFontFamily,{color:'#fff',fontSize:24}]}>{ICON.CHAT} </Text>
+                        消息列表
+                    </Text>
                 </View>
-                <ListView style={{ padding: 5, flex: 1 }}
+                <ListView style={{ flex: 1 }}
                           ref="list"
                           dataSource={this.state.dataSource}
                           renderRow={this.renderRow.bind(this)}
@@ -85,18 +91,22 @@ export default class MsgPage extends Component {
         if (rowData != undefined) {
             return (
                 <TouchableOpacity key={`${sectionID}-${rowID}`}
-                                  style={{ padding: 2, margin: 2,backgroundColor:"#fff" }}
+                                  style={{ paddingTop: 10,backgroundColor:"#fff" }}
                                   activeOpacity={1}
                                   onPress={this.go_to_chat.bind(this,rowData)}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems:'center' }}>
-                        <Image style={{ width: 60, height: 60,margin:10 }} source={rowData.head_img}/>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                        <Image style={{ width: 50, height: 50,borderRadius:25,borderWidth:1,borderColor:'#999',marginHorizontal:15 }} source={rowData.head_img}/>
                         <View style={{justifyContent:'center',flex:1}}>
-                            <Text style={{ fontSize: 18 ,marginBottom:5}}>{rowData.nickname}</Text>
-                            <Text
-                                style={[GlobalStyle.iconFontFamily,{ color: '#999', fontSize: 14 }]}>{rowData.content}</Text>
+                            <View style={{flexDirection:'row',marginBottom:5,justifyContent:'space-between',alignItems:'center'}}>
+                                <Text style={{ fontSize: 20,color:'#13b7f6' }}>{rowData.nickname}</Text>
+                                <Text style={{ color:'#999',fontSize:12,marginRight:10 }}>{Utils.dateFormat(rowData.create_time)}</Text>
+                            </View>
+                            <Text style={[GlobalStyle.iconFontFamily,{ color: '#666', fontSize: 16,width:width-120 }]}
+                                  numberOfLines={1}
+                            >{rowData.content}</Text>
+                            <View style={styles.separator}/>
                         </View>
-                        <View
-                            style={{margin:5,width:16,height:16,borderRadius:8,backgroundColor:((!rowData.is_read) && rowData.to_uid == global.userid)?'#f00':'#f000'}}/>
+                        <View style={{marginTop:15,marginRight:15,width:14,height:14,borderRadius:7,backgroundColor:((!rowData.is_read) && rowData.to_uid == global.userid)?'#f00':'#f000'}}/>
                     </View>
                 </TouchableOpacity>
             );
@@ -122,37 +132,10 @@ export default class MsgPage extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
-    },
-    // ------
-    inputView: {
-        margin: 3,
-        borderTopWidth: StyleSheet.hairlineWidth,
-        borderTopColor: '#CCC',
-        paddingHorizontal: 5,
-        paddingVertical: 5,
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    msg: {
-        flex: 1,
-        margin: 8
-    },
-    textInput: {
-        marginLeft: -15
-    },
+    separator: {
+        alignSelf: 'stretch',
+        height: StyleSheet.hairlineWidth,
+        backgroundColor: '#dce2ea',
+        marginTop: 10
+    }
 });

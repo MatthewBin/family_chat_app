@@ -14,13 +14,15 @@ import {
     TouchableOpacity,
     View,
     ToastAndroid,
-    Keyboard
+    Keyboard,
+    Image
 } from 'react-native';
 
 import {AccentColor, GlobalStyle} from 'GlobalStyle';
 import CommonTextInput from 'CommonTextInput';
 import CommonButton from 'CommonButton';
 import * as Utils from 'Utils';
+import Miao2 from '../miao2.png';
 
 export default class RegisterPage extends Component {
     static navigationOptions = {
@@ -69,11 +71,11 @@ export default class RegisterPage extends Component {
     render() {
         const {username, email, code, pwd, confirm_pwd} = this.state;
         return (
-            <View style={[GlobalStyle.commonPage,
-			{
-				paddingVertical: 40,
-				paddingHorizontal: 10
-			}]}>
+            <View style={{ paddingHorizontal: 20}}>
+                <Text style={{textAlign:'center',fontSize:20,margin:20}}>注册</Text>
+                <View  style={{justifyContent:'center',alignItems:'center'}}>
+                    <Image style={{width:60,height:60,marginTop:20}} source={Miao2}/>
+                </View>
                 <View style={[GlobalStyle.textInputContainer, {
 					flexDirection: 'column',
 					height: 300

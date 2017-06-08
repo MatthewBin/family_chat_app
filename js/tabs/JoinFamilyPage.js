@@ -11,10 +11,12 @@ import {
     Text,
     StyleSheet,
     NetInfo,
-    ToastAndroid
+    ToastAndroid,
+    Image
 }from 'react-native';
 import * as Utils from 'Utils';
 import CommonButton from 'CommonButton';
+import Logo from '../logo.png';
 
 const ips = [
     // '192.168.1.100',
@@ -25,11 +27,11 @@ const ips = [
     '192.168.1.24',
     '192.168.1.23',
     // '192.168.1.105',
-    // '192.168.1.106',
-    // '192.168.1.107',
-    // '192.168.1.108',
-    // '192.168.1.109',
-    // '192.168.1.110'
+    '192.168.1.106',
+    '192.168.1.107',
+    '192.168.1.108',
+    '192.168.1.109',
+    '192.168.1.110'
 ];
 
 export default class JoinFamilyPage extends Component {
@@ -72,7 +74,7 @@ export default class JoinFamilyPage extends Component {
             let connect_handle = setInterval(function () {
                 let index = (try_count) % ips.length;
                 this.setState({
-                    address: ips[try_count],
+                    address: ips[index],
                     connect_log: '正在连接...'
                 });
                 Utils.Utils.postFetch('http://' + ips[index] + ':8675/connect', {}, (success) => {
@@ -117,8 +119,11 @@ export default class JoinFamilyPage extends Component {
     render() {
         return (
             <View style={[styles.container]}>
-                <Text style={[styles.text1,{fontSize:30,textAlign:'center'}]}>Family Chat</Text>
+                {/*<Text style={[styles.text1,{fontSize:30,textAlign:'center'}]}>山寨QQ</Text>*/}
 
+                <View  style={{justifyContent:'center',alignItems:'center'}}>
+                    <Image style={{width:80,height:80,marginTop:20}} source={Logo}/>
+                </View>
                 <View style={[styles.block]}>
                     <Text style={styles.text1}>
                         服务地址：<Text style={styles.text2}>{this.state.server}</Text>
@@ -144,8 +149,9 @@ export default class JoinFamilyPage extends Component {
                     </Text>
                 </View>
 
-                <CommonButton text='进入 Family Chat'
+                <CommonButton text='山寨吧,QQ'
                               enable={!!this.state.family_url}
+                              is_simple={true}
                               onPress={()=>{
                                   if (!global.token) {
                                         global.RootNavigator.navigate('LoginPage');
@@ -173,7 +179,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 20,
         flex: 1,
-        backgroundColor: '#222',
+        // backgroundColor: '#222',
     },
     block: {
         padding: 20,
@@ -181,11 +187,11 @@ const styles = StyleSheet.create({
     },
     text1: {
         fontSize: 18,
-        color: '#EB0',
+        color: '#999',
     },
     text2: {
         fontSize: 18,
-        color: '#61B2A7',
+        color: '#13b7f6',
     },
     iconStyle: {
         color: '#fff',

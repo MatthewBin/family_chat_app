@@ -24,6 +24,7 @@ import {GlobalStyle} from 'GlobalStyle';
 import CommonButton from 'CommonButton';
 import CommonTextInput from 'CommonTextInput';
 import * as Utils from 'Utils';
+import Miao from '../miao.png';
 
 export default class LoginPage extends Component {
     static navigationOptions = {
@@ -45,8 +46,11 @@ export default class LoginPage extends Component {
         const {navigate} = this.props.navigation;
         const {username,pwd}=this.state;
         return (
-            <View>
-                <Text style={{textAlign:'center',fontSize:20,margin:20}}>欢迎登录FC</Text>
+            <View style={{ paddingHorizontal: 20}}>
+                <Text style={{textAlign:'center',fontSize:20,margin:20}}>登录</Text>
+                <View  style={{justifyContent:'center',alignItems:'center'}}>
+                    <Image style={{width:60,height:60,marginTop:20}} source={Miao}/>
+                </View>
                 <View
                     style={[GlobalStyle.textInputContainer, { flexDirection: 'column',height: 130, paddingHorizontal: 20, justifyContent: 'center'}]}>
                     <View style={{flexDirection: 'row',alignItems: 'center'}}>
@@ -70,7 +74,7 @@ export default class LoginPage extends Component {
                 <TouchableOpacity
                     onPress={() => global.RootNavigator.navigate('RegisterPage')}
                     style={{alignItems: 'center',marginTop: 5,paddingVertical: 10}}>
-                    <Text style={Styles.agreement}>没有账号？点此注册</Text>
+                    <Text style={[Styles.agreement,{color:'#f06b1d'}]}>没有账号？点此注册</Text>
                 </TouchableOpacity>
                 <CommonButton
                     style={{ marginTop: 20 }}
@@ -109,8 +113,7 @@ const Styles = StyleSheet.create({
     agreement: {
         fontFamily: 'PingFang SC',
         fontSize: 13,
-        lineHeight: 18,
-        color: '#858585'
+        lineHeight: 18
     },
     separator: {
         alignSelf: 'stretch',

@@ -13,17 +13,21 @@ import {
     RefreshControl,
     TouchableOpacity,
     Image,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    Dimensions
 } from 'react-native';
 
 import * as Utils from 'Utils';
 import {GlobalStyle} from 'GlobalStyle';
 import {ICON} from 'GlobalString';
+
+const {height, width} = Dimensions.get('window');
+
 export default class FriendPage extends Component {
     static navigationOptions = {
         tabBarLabel: '好友',
         tabBarIcon: ({tintColor}) => (
-            <Text style={[GlobalStyle.iconFontFamily,{color:tintColor,fontSize:20}]}>{ICON.FRIEND}</Text>),
+            <Text style={[GlobalStyle.iconFontFamily,{color:tintColor,fontSize:28,margin:10}]}>{ICON.FRIEND}</Text>),
         drawerLabel: '好友'
     }
 
@@ -62,10 +66,13 @@ export default class FriendPage extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <View style={{height:40,backgroundColor:'#222',justifyContent:'center',alignItems:'center'}}>
-                    <Text style={{color:'#fff',fontSize:20}}>好友列表</Text>
+                <View style={{height:40,backgroundColor:'#13b7f6',justifyContent:'center',alignItems:'center'}}>
+                    <Text style={{color:'#fff',fontSize:20}}>
+                        <Text style={[GlobalStyle.iconFontFamily,{color:'#fff',fontSize:24}]}>{ICON.FRIEND} </Text>
+                        好友列表
+                    </Text>
                 </View>
-                <ListView style={{ padding: 5, flex: 1 }}
+                <ListView style={{ flex: 1 }}
                           ref="list"
                           dataSource={this.state.dataSource}
                           renderRow={this.renderRow.bind(this)}
@@ -82,14 +89,15 @@ export default class FriendPage extends Component {
         if (rowData != undefined) {
             return (
                 <TouchableOpacity key={`${sectionID}-${rowID}`}
-                                  style={{ padding: 3, margin: 2,backgroundColor:"#fff"}}
+                                  style={{ paddingTop: 10,backgroundColor:'#fff'}}
                                   activeOpacity={1}
                                   onPress={this.go_to_chat.bind(this,rowData)}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems:'center' }}>
-                        <Image style={{ width: 60, height: 60,margin:10 }} source={rowData.head_img}/>
-                        <View style={{justifyContent:'center'}}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems:'flex-start' }}>
+                        <Image style={{ width: 50, height: 50,borderRadius:25,borderWidth:1,borderColor:'#999', marginHorizontal:15 }} source={rowData.head_img}/>
+                        <View style={{justifyContent:'center',marginRight:20}}>
                             <Text style={{ fontSize: 18 ,marginBottom:5}}>{rowData.nickname}</Text>
-                            <Text style={{ color: '#999', fontSize: 14 }}>签名: {rowData.description}</Text>
+                            <Text style={{ color: '#999', fontSize: 14,width:width-100}}>签名: {rowData.description}</Text>
+                            <View style={styles.separator}/>
                         </View>
                     </View>
 
@@ -107,34 +115,11 @@ export default class FriendPage extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
-    },
-    // ------
-    inputView: {
-        margin: 3,
-        borderTopWidth: StyleSheet.hairlineWidth,
-        borderTopColor: '#CCC',
-        paddingHorizontal: 5,
-        paddingVertical: 5,
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    textInput: {
-        marginLeft: -15
-    },
+    separator: {
+        alignSelf: 'stretch',
+        height: StyleSheet.hairlineWidth,
+        backgroundColor: '#dce2ea',
+        marginTop: 10
+    }
 });
 

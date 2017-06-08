@@ -19,28 +19,54 @@ import {
 
 export default class CommonButton extends Component {
     render() {
-        const { style, textStyle, disableStyle, disableTextStyle, enable, text, onPress } = this.props;
-        const currentStyle = enable ? [DefaultButtonStyle, style] : [DefaultButtonStyle, style, disableStyle];
-        const currentTextStyle = enable ? [DefaultTextStyle, textStyle] : [DefaultTextStyle, textStyle, disableTextStyle];
-        return (
-            <TouchableOpacity
-                activeOpacity={enable ? 0.2 : 1}
-                onPress={enable ?onPress:()=>{}}
-                style={currentStyle}>
-                <Text style={currentTextStyle}>
-                    {text}
-                </Text>
-            </TouchableOpacity>
-        );
+        const { style, textStyle, disableStyle, disableTextStyle, enable, text, onPress,is_simple } = this.props;
+
+        if(is_simple){
+            const currentStyle = enable ? [DefaultSimpleButtonStyle, style] : [DefaultSimpleButtonStyle, style, disableStyle];
+            const currentTextStyle = enable ? [DefaultSimpleTextStyle, textStyle] : [DefaultSimpleTextStyle, textStyle, {color: '#fff'}];
+            return (
+                <TouchableOpacity
+                    activeOpacity={enable ? 0.2 : 1}
+                    onPress={enable ?onPress:()=>{}}
+                    style={currentStyle}>
+                    <Text style={currentTextStyle}>
+                        {text}
+                    </Text>
+                </TouchableOpacity>
+            );
+        }else {
+            const currentStyle = enable ? [DefaultButtonStyle, style] : [DefaultButtonStyle, style, disableStyle];
+            const currentTextStyle = enable ? [DefaultTextStyle, textStyle] : [DefaultTextStyle, textStyle,disableTextStyle];
+            return (
+                <TouchableOpacity
+                    activeOpacity={enable ? 0.2 : 1}
+                    onPress={enable ?onPress:()=>{}}
+                    style={currentStyle}>
+                    <Text style={currentTextStyle}>
+                        {text}
+                    </Text>
+                </TouchableOpacity>
+            );
+        }
     }
 }
 
 const DefaultButtonStyle = {
     height: 43,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#f06b1d',
+    borderColor: '#13b7f6',
     borderRadius: 5,
-    backgroundColor: 'rgba(240,107,29,0.8)',
+    backgroundColor: '#13b7f6',
+    justifyContent: 'center',
+    alignItems: 'center'
+}
+
+const DefaultSimpleButtonStyle = {
+    height: 43,
+    borderWidth: 2,
+    borderColor: '#13b7f6',
+    borderRadius: 5,
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center'
 }
@@ -49,6 +75,12 @@ const DefaultTextStyle = {
     fontFamily: 'PingFangSC-Medium',
     fontSize: 18,
     color: 'white',
+}
+
+const DefaultSimpleTextStyle = {
+    fontFamily: 'PingFangSC-Medium',
+    fontSize: 18,
+    color: '#13b7f6',
 }
 
 CommonButton.propTypes = {

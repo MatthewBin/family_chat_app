@@ -37,10 +37,16 @@ export const ChatNavigator = TabNavigator({
     initialRouteName: 'FriendPage',
     headerMode: 'screen',
     tabBarOptions: {
-        activeTintColor: '#fc0',
-        activeBackgroundColor: '#000',
-        inactiveTintColor: '#fff',
-        inactiveBackgroundColor: '#000',
+        activeTintColor: '#13b7f6',
+        activeBackgroundColor: '#fff',
+        inactiveTintColor: '#999',
+        inactiveBackgroundColor: '#fff',
+        labelStyle: {
+            fontSize: 16,
+        },
+        style: {
+            height: 60,
+        },
     }
 });
 

@@ -27,7 +27,7 @@ export default class WhatYouDoPage extends Component {
     static navigationOptions = {
         tabBarLabel: '动态',
         tabBarIcon: ({tintColor}) => (
-            <Text style={[GlobalStyle.iconFontFamily,{color:tintColor,fontSize:20}]}>{ICON.TODO}</Text>),
+            <Text style={[GlobalStyle.iconFontFamily,{color:tintColor,fontSize:28,margin:10}]}>{ICON.TODO}</Text>),
         drawerLabel: '动态'
     }
 
@@ -68,8 +68,11 @@ export default class WhatYouDoPage extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <View style={{height:40,backgroundColor:'#222',justifyContent:'center',alignItems:'center'}}>
-                    <Text style={{color:'#fff',fontSize:20}}>好友动态</Text>
+                <View style={{height:40,backgroundColor:'#13b7f6',justifyContent:'center',alignItems:'center'}}>
+                    <Text style={{color:'#fff',fontSize:20}}>
+                        <Text style={[GlobalStyle.iconFontFamily,{color:'#fff',fontSize:24}]}>{ICON.TODO} </Text>
+                        好友动态
+                    </Text>
                 </View>
                 <View style={{height:80,backgroundColor:'#fff',flexDirection:'row'}}>
                     <Image style={{ width: 80, height: 80}} source={global.head_img}/>

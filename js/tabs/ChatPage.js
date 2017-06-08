@@ -17,27 +17,39 @@ import {
     Image,
     Keyboard,
     DeviceEventEmitter,
-    Vibration
+    Vibration,
+    TextInput
 } from 'react-native';
 
-import CommonTextInput from 'CommonTextInput';
+// import CommonTextInput from 'CommonTextInput';
 import * as Utils from 'Utils';
+import {GlobalStyle} from 'GlobalStyle';
+import {ICON} from 'GlobalString';
+import DSBottomModal from 'DSBottomModal';
 export default class ChatPage extends Component {
     static navigationOptions = {
-        tabBarLabel: '聊天',
-        tabBarIcon: ({tintColor}) => (
-            <Text style={[styles.iconStyle,{color:tintColor,fontSize:20}]}>&#xe606;</Text>),
         drawerLabel: '聊天'
     }
 
     constructor(props) {
         super(props);
         let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        let ds_emoji = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
+        // change emoji datasource
+        var arr = [];
+        for (var s in ICON) {
+            arr.push(ICON[s]);
+        }
+        arr.splice(0, 3);
+
         this.state = {
             dataSource: ds.cloneWithRows([]),
             isRefreshing: false,
             msg: '',
-            refresh_title: '查看更多'
+            refresh_title: '查看更多',
+            emoji_visible: false,
+            emoji_dataSource: ds_emoji.cloneWithRows(arr),
         };
 
         this.currentPageIndex = 0;
@@ -50,11 +62,11 @@ export default class ChatPage extends Component {
 
     componentDidMount() {
         DeviceEventEmitter.addListener('chat', (info) => {
-            if(info.from_user_id == global.current_friend.id){
-                if(global.currentScrern == "ChatPage"){
+            if (info.from_user_id == global.current_friend.id) {
+                if (global.currentScrern == "ChatPage") {
                     Utils.Utils.postFetch(global.family_url + 'user_chat/set_is_read', {
                         token: global.token,
-                        from_uid:global.current_friend.id
+                        from_uid: global.current_friend.id
                     }, (success) => {
                     }, (err) => {
                     });
@@ -77,10 +89,10 @@ export default class ChatPage extends Component {
         }
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         Utils.Utils.postFetch(global.family_url + 'user_chat/set_is_read', {
             token: global.token,
-            from_uid:global.current_friend.id
+            from_uid: global.current_friend.id
         }, (success) => {
         }, (err) => {
         });
@@ -119,20 +131,57 @@ export default class ChatPage extends Component {
                               progressBackgroundColor="#ffffff"/>
                           }/>
                 <View style={[styles.inputView]}>
-                    <CommonTextInput
-                        style={styles.textInput}
+                    <Text style={[GlobalStyle.iconFontFamily,{ fontSize: 38,margin:1 }]}
+                          onPress={()=>{this.setState({emoji_visible:true})}}>{ICON.E10}</Text>
+                    <TextInput
                         ref={(ref) => this.input = ref}
-                        onChangeText={msg => this.setState({ msg })}
+                        placeholderTextColor="#8a909f"
+                        onChangeText={msg=>this.setState({msg})}
+                        value={this.state.msg}
+                        maxLength={200}
                         keyboardType='default'
                         multiline={true}
-                        maxLength={200}
-                        placeholder=''/>
+                        underlineColorAndroid='transparent'
+                        style={[{
+                          flex: 1,
+                          alignSelf: 'stretch',
+                          fontFamily: 'iconfont',
+                          paddingHorizontal: 20,
+                          fontSize: 16,
+                          lineHeight: 23,
+                          letterSpacing: 1,
+                          color: '#333333'
+                        }]}
+                        autoCapitalize='none'
+                        autoCorrect={false}/>
                     <TouchableOpacity style={{ padding: 5 }}
                                       activeOpacity={1}
                                       onPress={this.sendMsg.bind(this)}>
                         <Text style={{ fontSize: 18 }}>发送</Text>
                     </TouchableOpacity>
                 </View>
+                <DSBottomModal
+                    animationType='none'//'fade'
+                    transparent={true}
+                    visible={this.state.emoji_visible}
+                    visibleCallBack={()=>{this.setState({emoji_visible:false});}}
+                    backgroundColor='transparent'
+                    height={250}
+                    onRequestClose={() => { } }>
+                    <View style={{backgroundColor:'#fff',flex:1}}>
+                        <ListView style={{ padding: 5,flex:1}}
+                                  dataSource={this.state.emoji_dataSource}
+                                  contentContainerStyle={styles.contentContainerStyle}
+                                  initialListSize={100}  // 蜜汁神坑，没有这行wrap时候不渲染后面
+                                  renderRow={this.renderEmoji.bind(this)}
+                                  enableEmptySections={true}
+                                  tintColor="#000000"
+                                  title={this.state.refresh_title}
+                                  titleColor="#000000"
+                                  colors={['#000000']}
+                                  progressBackgroundColor="#ffffff"/>
+                    </View>
+                </DSBottomModal>
             </View>
         );
     }
@@ -151,13 +200,13 @@ export default class ChatPage extends Component {
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                                 <Image style={{ width: 40, height: 40 }} source={global.current_friend.head_img}/>
                                 <View style={[styles.bold1]}>
-                                    <Text style={[styles.msg]}>{rowData.content}</Text>
+                                    <Text style={[styles.msg,GlobalStyle.iconFontFamily]}>{rowData.content}</Text>
                                 </View>
                             </View> :
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                                 <View style={[styles.bold2, { backgroundColor: 'white' }]}>
                                     <Text
-                                        style={[styles.msg, { textAlign: 'left' }]}>{rowData.content.toString().replace(/&nbsp;/g, " ")}</Text>
+                                        style={[styles.msg,GlobalStyle.iconFontFamily, { textAlign: 'left' }]}>{rowData.content.toString().replace(/&nbsp;/g, " ")}</Text>
                                 </View>
                                 <Image style={{ width: 40, height: 40 }} source={global.head_img}/>
                             </View>
@@ -168,6 +217,24 @@ export default class ChatPage extends Component {
         } else {
             return null;
         }
+    }
+
+    renderEmoji(rowData, sectionID, rowID, highlightRow) {
+        return (
+            <TouchableOpacity key={`${sectionID}-${rowID}`}
+                              style={{margin: 10}}
+                              activeOpacity={1}
+                              onPress={this.select_emoji.bind(this,rowData)}>
+                <Text style={[GlobalStyle.iconFontFamily,{fontSize:35}]}>{rowData}</Text>
+            </TouchableOpacity>
+        );
+    }
+
+    select_emoji(rowData) {
+        this.setState({
+            emoji_visible: false,
+            msg: this.state.msg + rowData
+        });
     }
 
     loadMore() {
@@ -229,7 +296,7 @@ export default class ChatPage extends Component {
         }
     }
 
-    get_last_msg(){
+    get_last_msg() {
         Utils.Utils.postFetch(global.family_url + 'user_chat/get_last_msg', {
             token: token,
             from_uid: global.current_friend.id
@@ -263,6 +330,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#333333',
         marginBottom: 5,
+    },
+    contentContainerStyle: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        padding: 10
+        // alignItems: 'flex-start',
+        // justifyContent: 'flex-start'
     },
     // ------
     inputView: {

@@ -35,18 +35,6 @@ export default class SettingPage extends Component {
         super(props);
     }
 
-    componentDidMount() {
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-
-    }
-
-    componentWillUnmount() {
-
-    }
-
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: '#fafafa'}}>
@@ -60,7 +48,7 @@ export default class SettingPage extends Component {
                     text='退出当前帐号'
                     onPress={() => {
                         global.token='';
-                        global.RootNavigator.navigate('JoinFamilyPage');
+                        global.RootNavigator.goBack();
                     }}/>
             </View>
         );

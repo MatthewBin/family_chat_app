@@ -41,7 +41,7 @@ export default class CommonTextInput extends Component {
                 style={[{
                   flex: 1,
                   alignSelf: 'stretch',
-                  fontFamily: 'PingFang SC',
+                  fontFamily: 'iconfont',
                   paddingHorizontal: 20,
                   marginVertical: Platform.OS === 'android' ? 0 : 0,
                   fontSize: 16,

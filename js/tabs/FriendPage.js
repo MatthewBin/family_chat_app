@@ -17,11 +17,13 @@ import {
 } from 'react-native';
 
 import * as Utils from 'Utils';
+import {GlobalStyle} from 'GlobalStyle';
+import {ICON} from 'GlobalString';
 export default class FriendPage extends Component {
     static navigationOptions = {
         tabBarLabel: '好友',
         tabBarIcon: ({tintColor}) => (
-            <Text style={[styles.iconStyle,{color:tintColor,fontSize:20}]}>&#xe606;</Text>),
+            <Text style={[GlobalStyle.iconFontFamily,{color:tintColor,fontSize:20}]}>{ICON.FRIEND}</Text>),
         drawerLabel: '好友'
     }
 

@@ -19,13 +19,15 @@ import {
     Keyboard
 } from 'react-native';
 
+import {GlobalStyle} from 'GlobalStyle';
+import {ICON} from 'GlobalString';
 import CommonTextInput from 'CommonTextInput';
 import * as Utils from 'Utils';
 export default class WhatYouDoPage extends Component {
     static navigationOptions = {
         tabBarLabel: '动态',
         tabBarIcon: ({tintColor}) => (
-            <Text style={[styles.iconStyle,{color:tintColor,fontSize:20}]}>&#xe606;</Text>),
+            <Text style={[GlobalStyle.iconFontFamily,{color:tintColor,fontSize:20}]}>{ICON.TODO}</Text>),
         drawerLabel: '动态'
     }
 
@@ -120,7 +122,8 @@ export default class WhatYouDoPage extends Component {
                         <View style={{height:40,justifyContent:'center'}}>
                             <Text style={{ fontSize: 20 ,marginBottom:5}}>{rowData.nickname}</Text>
                         </View>
-                        <Text style={{ color: '#999', fontSize: 14 }}>{rowData.content}</Text>
+                        <Text
+                            style={[GlobalStyle.iconFontFamily,{ color: '#999', fontSize: 14 }]}>{rowData.content}</Text>
                         <Text
                             style={{ textAlign: 'left', color: '#999', marginTop:10, fontSize: 10 }}>{Utils.dateFormat(rowData.create_time)}</Text>
                     </View>

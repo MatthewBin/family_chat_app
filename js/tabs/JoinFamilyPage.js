@@ -89,7 +89,7 @@ export default class JoinFamilyPage extends Component {
 
                 });
                 try_count++;
-            }.bind(this), 1000);
+            }.bind(this), 500);
         }
     }
 

@@ -20,13 +20,15 @@ import {
     ToastAndroid
 } from 'react-native';
 
+import {GlobalStyle} from 'GlobalStyle';
+import {ICON} from 'GlobalString';
 import * as Utils from 'Utils';
 
 export default class MsgPage extends Component {
     static navigationOptions = {
         tabBarLabel: '消息',
         tabBarIcon: ({tintColor}) => (
-            <Text style={[styles.iconStyle,{color:tintColor,fontSize:20}]}>&#xe606;</Text>),
+            <Text style={[GlobalStyle.iconFontFamily,{color:tintColor,fontSize:20}]}>{ICON.CHAT}</Text>),
         drawerLabel: '消息'
     }
 
@@ -40,7 +42,7 @@ export default class MsgPage extends Component {
 
     componentDidMount() {
         DeviceEventEmitter.addListener('chat', (msg) => {
-            if(global.currentScrern == "MsgPage"){
+            if (global.currentScrern == "MsgPage") {
                 this.get_recently_list();
             }
         });
@@ -90,9 +92,11 @@ export default class MsgPage extends Component {
                         <Image style={{ width: 60, height: 60,margin:10 }} source={rowData.head_img}/>
                         <View style={{justifyContent:'center',flex:1}}>
                             <Text style={{ fontSize: 18 ,marginBottom:5}}>{rowData.nickname}</Text>
-                            <Text style={{ color: '#999', fontSize: 14 }}>{rowData.content}</Text>
+                            <Text
+                                style={[GlobalStyle.iconFontFamily,{ color: '#999', fontSize: 14 }]}>{rowData.content}</Text>
                         </View>
-                        <View style={{margin:5,width:16,height:16,borderRadius:8,backgroundColor:((!rowData.is_read) && rowData.to_uid == global.userid)?'#f00':'#f000'}}/>
+                        <View
+                            style={{margin:5,width:16,height:16,borderRadius:8,backgroundColor:((!rowData.is_read) && rowData.to_uid == global.userid)?'#f00':'#f000'}}/>
                     </View>
                 </TouchableOpacity>
             );
@@ -108,7 +112,7 @@ export default class MsgPage extends Component {
         };
         Utils.Utils.postFetch(global.family_url + 'user_chat/set_is_read', {
             token: global.token,
-            from_uid:global.current_friend.id
+            from_uid: global.current_friend.id
         }, (success) => {
         }, (err) => {
         });

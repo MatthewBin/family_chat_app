@@ -75,6 +75,10 @@ export default class family_chat_app extends Component {
                                       global.RootNavigator.navigate("FriendNavigator");
                                       return;
                                   }
+                                  if(global.currentScrern != "JoinFamilyPage" && global.currentScrern != "LoginPage" && !global.token){
+                                      global.RootNavigator.goBack();
+                                      return;
+                                  }
 
                               }}/>
         );

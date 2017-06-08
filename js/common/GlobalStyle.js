@@ -43,7 +43,8 @@ export const GlobalStyle = StyleSheet.create({
     },
     //icon字体
     iconFontFamily: {
-        // fontFamily: "dscj-appfont",
+        fontFamily: "iconfont",
+        fontSize:16
     },
     textInputContainer: {
         paddingVertical: 2,

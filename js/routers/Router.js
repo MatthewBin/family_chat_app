@@ -46,6 +46,8 @@ export const ChatNavigator = TabNavigator({
         },
         style: {
             height: 60,
+            borderTopColor:'#13b7f6',
+            borderTopWidth:2
         },
     }
 });

@@ -58,6 +58,7 @@ export default class FriendPage extends Component {
                 this.setState(prevState => ({
                     dataSource: prevState.dataSource.cloneWithRows(success.msg)
                 }));
+                global.friend_list = success.msg;
             }
         }, (err) => {
         });
@@ -93,7 +94,7 @@ export default class FriendPage extends Component {
                                   activeOpacity={1}
                                   onPress={this.go_to_chat.bind(this,rowData)}>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems:'flex-start' }}>
-                        <Image style={{ width: 50, height: 50,borderRadius:25,borderWidth:1,borderColor:'#999', marginHorizontal:15 }} source={rowData.head_img}/>
+                        <Image style={{ width: 50, height: 50,borderRadius:25,borderWidth:StyleSheet.hairlineWidth,borderColor:'#ccc', marginHorizontal:15 }} source={rowData.head_img}/>
                         <View style={{justifyContent:'center',marginRight:20}}>
                             <Text style={{ fontSize: 18 ,marginBottom:5}}>{rowData.nickname}</Text>
                             <Text style={{ color: '#999', fontSize: 14,width:width-100}}>签名: {rowData.description}</Text>

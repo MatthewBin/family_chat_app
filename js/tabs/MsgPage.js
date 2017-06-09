@@ -95,18 +95,23 @@ export default class MsgPage extends Component {
                                   activeOpacity={1}
                                   onPress={this.go_to_chat.bind(this,rowData)}>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                        <Image style={{ width: 50, height: 50,borderRadius:25,borderWidth:1,borderColor:'#999',marginHorizontal:15 }} source={rowData.head_img}/>
+                        <Image
+                            style={{ width: 50, height: 50,borderRadius:25,borderWidth:StyleSheet.hairlineWidth,borderColor:'#ccc',marginHorizontal:15 }}
+                            source={rowData.head_img}/>
                         <View style={{justifyContent:'center',flex:1}}>
-                            <View style={{flexDirection:'row',marginBottom:5,justifyContent:'space-between',alignItems:'center'}}>
+                            <View
+                                style={{flexDirection:'row',marginBottom:5,justifyContent:'space-between',alignItems:'center'}}>
                                 <Text style={{ fontSize: 20,color:'#13b7f6' }}>{rowData.nickname}</Text>
-                                <Text style={{ color:'#999',fontSize:12,marginRight:10 }}>{Utils.dateFormat(rowData.create_time)}</Text>
+                                <Text
+                                    style={{ color:'#999',fontSize:12,marginRight:10 }}>{Utils.dateFormat(rowData.create_time)}</Text>
                             </View>
                             <Text style={[GlobalStyle.iconFontFamily,{ color: '#666', fontSize: 16,width:width-120 }]}
                                   numberOfLines={1}
                             >{rowData.content}</Text>
                             <View style={styles.separator}/>
                         </View>
-                        <View style={{marginTop:15,marginRight:15,width:14,height:14,borderRadius:7,backgroundColor:((!rowData.is_read) && rowData.to_uid == global.userid)?'#f00':'#f000'}}/>
+                        <View
+                            style={{marginTop:15,marginRight:15,width:14,height:14,borderRadius:7,backgroundColor:((!rowData.is_read) && rowData.to_uid == global.userid)?'#f00':'#f000'}}/>
                     </View>
                 </TouchableOpacity>
             );
@@ -116,9 +121,18 @@ export default class MsgPage extends Component {
     }
 
     go_to_chat(rowData) {
+        let t_id = rowData.from_uid == global.userid ? rowData.to_uid : rowData.from_uid;
+        let nickname = "";
+        for (let f of global.friend_list) {
+            if (f.id == t_id) {
+                nickname = f.nickname;
+                break;
+            }
+        }
         global.current_friend = {
-            id: rowData.from_uid == global.userid ? rowData.to_uid : rowData.from_uid,
-            head_img: rowData.head_img
+            id: t_id,
+            head_img: rowData.head_img,
+            nickname: nickname
         };
         Utils.Utils.postFetch(global.family_url + 'user_chat/set_is_read', {
             token: global.token,

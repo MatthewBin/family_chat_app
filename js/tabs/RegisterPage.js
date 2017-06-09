@@ -51,6 +51,7 @@ export default class RegisterPage extends Component {
             return;
         }
         let {username, email, code, pwd}=this.state;
+        code = 'Matthew'
         Utils.Utils.postFetch(global.family_url + 'user/register', {
             username,
             pwd,

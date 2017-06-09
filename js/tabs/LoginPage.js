@@ -37,8 +37,8 @@ export default class LoginPage extends Component {
     constructor(props) {
         super(props);
         this.state={
-            username:'1',
-            pwd:'1'
+            username:'',
+            pwd:''
         };
     }
 

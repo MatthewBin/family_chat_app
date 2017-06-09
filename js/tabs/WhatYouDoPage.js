@@ -74,8 +74,8 @@ export default class WhatYouDoPage extends Component {
                         好友动态
                     </Text>
                 </View>
-                <View style={{height:80,backgroundColor:'#fff',flexDirection:'row'}}>
-                    <Image style={{ width: 80, height: 80}} source={global.head_img}/>
+                <View style={{height:80,backgroundColor:'#fff',flexDirection:'row',borderBottomWidth:10,borderColor:'#13b7f6'}}>
+                    <Image style={{ width: 70, height: 70}} source={global.head_img}/>
                     <CommonTextInput
                         style={styles.textInput}
                         ref={(ref) => this.input = ref}
@@ -90,7 +90,7 @@ export default class WhatYouDoPage extends Component {
                         <Text style={{ fontSize: 20 ,marginHorizontal:10}}>发送</Text>
                     </TouchableOpacity>
                 </View>
-                <ListView style={{ padding: 5, flex: 1 ,height:200}}
+                <ListView style={{flex: 1}}
                           ref="list"
                           dataSource={this.state.dataSource}
                           renderRow={this.renderRow.bind(this)}
@@ -119,16 +119,17 @@ export default class WhatYouDoPage extends Component {
         if (rowData != undefined) {
             return (
                 <View
-                    style={{ padding: 2, margin: 2,backgroundColor:"#fff",flexDirection: 'row', justifyContent: 'flex-start' }}>
+                    style={{backgroundColor:"#fff",flexDirection: 'row', justifyContent: 'flex-start' }}>
                     <Image style={{ width: 40, height: 40,marginRight:15}} source={rowData.head_img}/>
-                    <View style={{justifyContent:'center',flex:1}}>
+                    <View style={{flex:1}}>
                         <View style={{height:40,justifyContent:'center'}}>
-                            <Text style={{ fontSize: 20 ,marginBottom:5}}>{rowData.nickname}</Text>
+                            <Text style={{ fontSize: 20}}>{rowData.nickname}</Text>
                         </View>
                         <Text
-                            style={[GlobalStyle.iconFontFamily,{ color: '#999', fontSize: 14 }]}>{rowData.content}</Text>
+                            style={{ color: '#999', fontSize: 14 }}>{rowData.content}</Text>
                         <Text
-                            style={{ textAlign: 'left', color: '#999', marginTop:10, fontSize: 10 }}>{Utils.dateFormat(rowData.create_time)}</Text>
+                            style={{ textAlign: 'right', color: '#ccc', marginTop:10,marginRight:10, fontSize: 10 }}>{Utils.dateFormat(rowData.create_time)}</Text>
+                        <View style={styles.separator}/>
                     </View>
                 </View>
             );
@@ -215,6 +216,12 @@ export default class WhatYouDoPage extends Component {
 }
 
 const styles = StyleSheet.create({
+    separator: {
+        alignSelf: 'stretch',
+        height: StyleSheet.hairlineWidth,
+        backgroundColor: '#dce2ea',
+        marginTop: 10
+    },
     container: {
         flex: 1,
         justifyContent: 'center',

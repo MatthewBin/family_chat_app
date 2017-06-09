@@ -18,9 +18,11 @@ import {
     Switch,
     Text,
     TouchableOpacity,
-    View
+    View,
+    Image
 } from 'react-native';
 import CommonButton from 'CommonButton';
+import Nothing from '../nothing.png';
 
 export default class SettingPage extends Component {
     static navigationOptions = {
@@ -38,7 +40,9 @@ export default class SettingPage extends Component {
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: '#fafafa'}}>
-                <Text>没有内容</Text>
+                <View style={{justifyContent:'center',alignItems:'center'}}>
+                    <Image style={{width:80,height:80,marginVertical:80}} source={Nothing}/>
+                </View>
                 <View style={Styles.separator}/>
                 <CommonButton
                     style={{

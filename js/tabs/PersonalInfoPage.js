@@ -59,6 +59,7 @@ export default class PersonalInfoPage extends Component {
     render() {
         return (
             <View style={[GlobalStyle.commonPage]}>
+                <Text style={{textAlign:'center',fontSize:20,marginTop:20}}>个人信息</Text>
                 <View style={[Styles.separator,{marginTop:20}]}/>
                 <TouchableOpacity activeOpacity={1} style={[Styles.row,{height:80}]}
                                   onPress={this.selectPhotoTapped.bind(this)}>

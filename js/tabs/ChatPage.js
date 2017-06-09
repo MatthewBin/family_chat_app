@@ -50,6 +50,7 @@ export default class ChatPage extends Component {
             refresh_title: '查看更多',
             emoji_visible: false,
             emoji_dataSource: ds_emoji.cloneWithRows(arr),
+            friend_name:''
         };
 
         this.currentPageIndex = 0;
@@ -61,6 +62,9 @@ export default class ChatPage extends Component {
     }
 
     componentDidMount() {
+        this.setState({
+           friend_name:global.current_friend.nickname
+        });
         DeviceEventEmitter.addListener('chat', (info) => {
             if (info.from_user_id == global.current_friend.id) {
                 if (global.currentScrern == "ChatPage") {
@@ -100,7 +104,10 @@ export default class ChatPage extends Component {
 
     render() {
         return (
-            <View style={{flex:1}}>
+            <View style={{ flex: 1 }}>
+                <View style={{height:40,backgroundColor:'#13b7f6',justifyContent:'center',alignItems:'center'}}>
+                    <Text style={{color:'#fff',fontSize:20}}>{this.state.friend_name}</Text>
+                </View>
                 <ListView style={{ padding: 5, flex: 1 }}
                           ref="list"
                           dataSource={this.state.dataSource}
@@ -195,20 +202,20 @@ export default class ChatPage extends Component {
                                   onLongPress={() => this.setState({ delModal: true, delRow: rowData })}>
                     <View>
                         <Text
-                            style={{ textAlign: 'center', color: '#666', fontSize: 12 }}>{Utils.dateFormat(rowData.create_time)}</Text>
+                            style={{ textAlign: 'center', color: '#999', fontSize: 12 }}>{Utils.dateFormat(rowData.create_time)}</Text>
                         {rowData.to_uid != global.current_friend.id ?
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                                <Image style={{ width: 40, height: 40 }} source={global.current_friend.head_img}/>
-                                <View style={[styles.bold1]}>
-                                    <Text style={[styles.msg,GlobalStyle.iconFontFamily]}>{rowData.content}</Text>
+                                <Image style={{ width: 40, height: 40,borderRadius:20,borderColor:'#ccc',borderWidth:StyleSheet.hairlineWidth }} source={global.current_friend.head_img}/>
+                                <View style={[styles.bold1, { backgroundColor: '#13b7f6' }]}>
+                                    <Text style={[styles.msg,GlobalStyle.iconFontFamily,{color:'#fff' }]}>{rowData.content}</Text>
                                 </View>
                             </View> :
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                <View style={[styles.bold2, { backgroundColor: 'white' }]}>
+                                <View style={[styles.bold2, { backgroundColor: '#13b7f6' }]}>
                                     <Text
-                                        style={[styles.msg,GlobalStyle.iconFontFamily, { textAlign: 'left' }]}>{rowData.content.toString().replace(/&nbsp;/g, " ")}</Text>
+                                        style={[styles.msg,GlobalStyle.iconFontFamily, { textAlign: 'left',color:'#fff' }]}>{rowData.content.toString().replace(/&nbsp;/g, " ")}</Text>
                                 </View>
-                                <Image style={{ width: 40, height: 40 }} source={global.head_img}/>
+                                <Image style={{ width: 40, height: 40 ,borderRadius:20,borderColor:'#ccc',borderWidth:StyleSheet.hairlineWidth}} source={global.head_img}/>
                             </View>
                         }
                     </View>
@@ -353,7 +360,7 @@ const styles = StyleSheet.create({
         margin: 8
     },
     bold1: {
-        borderColor: '#CCC',
+        borderColor: '#13b7f6',
         borderWidth: 1,
         borderRadius: 5,
         marginLeft: 10,
@@ -362,7 +369,7 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     bold2: {
-        borderColor: '#CCC',
+        borderColor: '#13b7f6',
         borderWidth: 1,
         borderRadius: 5,
         marginLeft: 80,
